@@ -15,9 +15,9 @@ export default function BlogPostPage() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await fetch(`/api/blog/posts/${params.slug}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/blog/posts/${params.slug}`);
         const data = await response.json();
-        
+
         if (data.success) {
           setPost(data.data);
         } else {
@@ -50,8 +50,8 @@ export default function BlogPostPage() {
         <div className="text-center">
           <h1 className="text-4xl font-bold text-white mb-4">Post Not Found</h1>
           <p className="text-gray-300 mb-8">{error || 'The blog post you are looking for does not exist.'}</p>
-          <a 
-            href="/blog" 
+          <a
+            href="/blog"
             className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
           >
             Back to Blog

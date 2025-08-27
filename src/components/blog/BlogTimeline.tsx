@@ -30,9 +30,9 @@ export default function BlogTimeline() {
 
   const fetchTimelineData = async () => {
     try {
-      const response = await fetch('/api/blog/timeline');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/blog/timeline`);
       const data = await response.json();
-      
+
       if (data.success) {
         setTimelineData(data.data);
         // Set initial year to the most recent year with posts
@@ -53,9 +53,9 @@ export default function BlogTimeline() {
 
   const fetchTags = async () => {
     try {
-      const response = await fetch('/api/blog/tags');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/blog/tags`);
       const data = await response.json();
-      
+
       if (data.success) {
         setTags(data.data);
       }
@@ -66,7 +66,7 @@ export default function BlogTimeline() {
 
   const getFilteredPosts = (): BlogPostListItem[] => {
     let posts: BlogPostListItem[] = [];
-    
+
     // Collect posts based on selected year/month
     if (selectedYear && timelineData[selectedYear]) {
       if (selectedMonth !== null && timelineData[selectedYear][selectedMonth]) {
@@ -128,7 +128,7 @@ export default function BlogTimeline() {
     return (
       <div className="text-center py-12">
         <div className="text-red-400 text-xl mb-4">⚠️ {error}</div>
-        <button 
+        <button
           onClick={() => {
             setError(null);
             setLoading(true);
@@ -157,7 +157,7 @@ export default function BlogTimeline() {
           onMonthSelect={handleMonthSelect}
           timelineData={timelineData}
         />
-        
+
         <TagFilter
           tags={tags}
           selectedTag={selectedTag}
@@ -191,9 +191,9 @@ export default function BlogTimeline() {
             {Object.keys(timelineData[year] || {}).map(monthIndex => {
               const month = parseInt(monthIndex);
               const monthPosts = timelineData[year][month];
-              
+
               // Filter posts by tag if selected
-              const visiblePosts = selectedTag 
+              const visiblePosts = selectedTag
                 ? monthPosts.filter(post => post.tags.includes(selectedTag))
                 : monthPosts;
 
