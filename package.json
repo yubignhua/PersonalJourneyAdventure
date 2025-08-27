@@ -1,0 +1,51 @@
+{
+  "name": "interactive-portfolio-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@monaco-editor/react": "^4.6.0",
+    "@react-three/drei": "^9.88.0",
+    "@react-three/fiber": "^8.15.0",
+    "@tailwindcss/typography": "^0.5.10",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "autoprefixer": "^10.4.16",
+    "axios": "^1.6.0",
+    "d3": "^7.8.5",
+    "framer-motion": "^10.16.0",
+    "next": "^14.0.0",
+    "postcss": "^8.4.31",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-error-boundary": "^6.0.0",
+    "socket.io-client": "^4.7.0",
+    "tailwindcss": "^3.3.0",
+    "three": "^0.169.0",
+    "typescript": "^5.0.0",
+    "zustand": "^4.4.0"
+  },
+  "devDependencies": {
+    "@types/d3": "^7.4.0",
+    "@types/three": "^0.169.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^14.0.0"
+  },
+  "keywords": [
+    "portfolio",
+    "interactive",
+    "3d",
+    "react",
+    "nextjs"
+  ],
+  "author": "",
+  "license": "MIT",
+  "description": "Interactive Portfolio Website Frontend"
+}
