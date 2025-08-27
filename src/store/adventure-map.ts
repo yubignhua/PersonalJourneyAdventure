@@ -178,6 +178,13 @@ export const useAdventureMapStore = create<AdventureMapState>()(
                                 githubUrl: 'https://github.com/example/portfolio',
                                 featured: true,
                                 color: '#00FFFF',
+                                demoConfig: {
+                                    type: 'interactive-component',
+                                    interactiveFeatures: [
+                                        { name: 'Particle System', description: 'Interactive 3D particles', action: 'particle-demo' },
+                                        { name: 'Performance Test', description: 'Test system performance', action: 'performance-test' }
+                                    ]
+                                },
                                 achievements: [
                                     {
                                         id: 'first-visit',
@@ -206,7 +213,25 @@ export const useAdventureMapStore = create<AdventureMapState>()(
                                 githubUrl: 'https://github.com/example/ecommerce',
                                 liveUrl: 'https://example-ecommerce.com',
                                 featured: false,
-                                color: '#22C55E'
+                                color: '#22C55E',
+                                demoConfig: {
+                                    type: 'interactive-component',
+                                    interactiveFeatures: [
+                                        { name: 'Shopping Cart', description: 'Add items to cart with real-time inventory', action: 'shopping-cart' },
+                                        { name: 'Payment Flow', description: 'Simulate payment processing', action: 'payment-demo' }
+                                    ]
+                                },
+                                metrics: {
+                                    githubStars: 42,
+                                    githubForks: 12,
+                                    githubWatchers: 8,
+                                    commits: 156,
+                                    contributors: 3,
+                                    linesOfCode: 8500,
+                                    deploymentStatus: 'deployed',
+                                    uptime: 99.8,
+                                    performanceScore: 92
+                                }
                             },
                             {
                                 id: 'mobile-game',

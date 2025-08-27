@@ -10,6 +10,7 @@ const navigationItems = [
   { id: 'home', label: 'Home', icon: '🏠', description: 'Return to homepage' },
   { id: 'lab', label: 'Interactive Lab', icon: '🧪', description: 'Explore 3D experiments' },
   { id: 'adventure', label: 'Adventure Map', icon: '🗺️', description: 'Discover project islands' },
+  { id: 'blog', label: 'Tech Blog', icon: '📚', description: 'Read articles and tutorials' },
   { id: 'timeline', label: 'Time Machine', icon: '⏰', description: 'Browse blog timeline' },
   { id: 'contact', label: 'Contact Portal', icon: '🚀', description: 'Get in touch' },
 ]
@@ -45,7 +46,7 @@ export default function Navigation() {
     window.addEventListener('scroll', handleScroll)
     document.addEventListener('keydown', handleKeyDown)
     document.addEventListener('mousedown', handleClickOutside)
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll)
       document.removeEventListener('keydown', handleKeyDown)
@@ -57,8 +58,27 @@ export default function Navigation() {
     setCurrentSection(sectionId)
     setIsOpen(false)
     setFocusedIndex(-1)
-    
-    // Smooth scroll to section
+
+    // Handle special navigation cases
+    if (sectionId === 'blog' || sectionId === 'timeline') {
+      // Navigate to blog page
+      window.location.href = '/blog'
+      return
+    }
+
+    if (sectionId === 'home') {
+      // Navigate to home page
+      window.location.href = '/'
+      return
+    }
+
+    if (sectionId === 'adventure') {
+      // Navigate to projects page
+      window.location.href = '/projects'
+      return
+    }
+
+    // Smooth scroll to section for same-page navigation
     const element = document.getElementById(sectionId)
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' })
@@ -92,11 +112,10 @@ export default function Navigation() {
         ref={navRef}
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled 
-            ? 'bg-black/20 backdrop-blur-md border-b border-white/10' 
-            : 'bg-transparent'
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+          ? 'bg-black/20 backdrop-blur-md border-b border-white/10'
+          : 'bg-transparent'
+          }`}
         role="navigation"
         aria-label="Main navigation"
       >
@@ -124,11 +143,10 @@ export default function Navigation() {
                   whileTap={{ scale: 0.95 }}
                   onClick={() => handleNavigation(item.id)}
                   onKeyDown={(e) => handleKeyNavigation(e, index)}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-cyber-blue focus:ring-offset-2 focus:ring-offset-transparent ${
-                    currentSection === item.id
-                      ? 'bg-cyber-blue/20 text-cyber-blue'
-                      : 'text-white/80 hover:text-white hover:bg-white/10'
-                  }`}
+                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-cyber-blue focus:ring-offset-2 focus:ring-offset-transparent ${currentSection === item.id
+                    ? 'bg-cyber-blue/20 text-cyber-blue'
+                    : 'text-white/80 hover:text-white hover:bg-white/10'
+                    }`}
                   aria-label={`Navigate to ${item.label}: ${item.description}`}
                   aria-current={currentSection === item.id ? 'page' : undefined}
                   role="menuitem"
@@ -187,11 +205,10 @@ export default function Navigation() {
                     whileHover={{ x: 10 }}
                     onClick={() => handleNavigation(item.id)}
                     onKeyDown={(e) => handleKeyNavigation(e, index)}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-cyber-blue focus:ring-offset-2 focus:ring-offset-transparent ${
-                      currentSection === item.id
-                        ? 'bg-cyber-blue/20 text-cyber-blue'
-                        : 'text-white/80 hover:text-white hover:bg-white/10'
-                    } ${focusedIndex === index ? 'ring-2 ring-cyber-blue' : ''}`}
+                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-cyber-blue focus:ring-offset-2 focus:ring-offset-transparent ${currentSection === item.id
+                      ? 'bg-cyber-blue/20 text-cyber-blue'
+                      : 'text-white/80 hover:text-white hover:bg-white/10'
+                      } ${focusedIndex === index ? 'ring-2 ring-cyber-blue' : ''}`}
                     role="menuitem"
                     tabIndex={0}
                     aria-current={currentSection === item.id ? 'page' : undefined}

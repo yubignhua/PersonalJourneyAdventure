@@ -1,10 +1,11 @@
 'use client'
 
-import React, { useState, useRef, useCallback, useEffect } from 'react'
+import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ProjectIsland, MapViewport, MapControls, AdventureMapProps } from '@/types/adventure-map'
 import { ProjectIslandComponent } from './ProjectIslandComponent'
 import { MapNavigation } from './MapNavigation'
+import { AchievementSystem } from './AchievementSystem'
 import { useAdventureMapStore } from '@/store/adventure-map'
 
 const INITIAL_VIEWPORT: MapViewport = {
@@ -54,16 +55,16 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
   }, [])
 
   // Map controls
-  const mapControls: MapControls = {
-    pan: useCallback((deltaX: number, deltaY: number) => {
+  const mapControls: MapControls = useMemo(() => ({
+    pan: (deltaX: number, deltaY: number) => {
       setViewport(prev => ({
         ...prev,
         x: prev.x + deltaX,
         y: prev.y + deltaY
       }))
-    }, []),
+    },
 
-    zoom: useCallback((factor: number, centerX?: number, centerY?: number) => {
+    zoom: (factor: number, centerX?: number, centerY?: number) => {
       setViewport(prev => {
         const newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, prev.zoom * factor))
         
@@ -83,9 +84,9 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
         
         return { ...prev, zoom: newZoom }
       })
-    }, []),
+    },
 
-    zoomToIsland: useCallback((island: ProjectIsland) => {
+    zoomToIsland: (island: ProjectIsland) => {
       const targetX = -island.position.x * 100 + viewport.width / 2
       const targetY = -island.position.y * 100 + viewport.height / 2
       const targetZoom = island.position.size === 'large' ? 1.5 : island.position.size === 'medium' ? 1.8 : 2.2
@@ -96,13 +97,13 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
         y: targetY,
         zoom: targetZoom
       }))
-    }, [viewport.width, viewport.height]),
+    },
 
-    resetView: useCallback(() => {
+    resetView: () => {
       setViewport(INITIAL_VIEWPORT)
-    }, []),
+    },
 
-    fitToContent: useCallback(() => {
+    fitToContent: () => {
       if (islands.length === 0) return
       
       const padding = 100
@@ -127,8 +128,8 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
         y: viewport.height / 2 - centerY * scale,
         zoom: scale
       }))
-    }, [islands, viewport.width, viewport.height])
-  }
+    }
+  }), [islands, viewport.width, viewport.height])
 
   // Mouse event handlers
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
@@ -323,6 +324,9 @@ export const AdventureMap: React.FC<AdventureMapProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Achievement System */}
+      <AchievementSystem />
     </div>
   )
 }

@@ -1,8 +1,10 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ProjectDetailModalProps } from '@/types/adventure-map'
+import { ProjectDetailModalProps, DemoInteractionResult } from '@/types/adventure-map'
+import { InteractiveDemo } from './InteractiveDemo'
+import { useAdventureMapStore } from '@/store/adventure-map'
 
 export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
   island,
@@ -12,6 +14,16 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
   onGithubClick,
   onLiveUrlClick
 }) => {
+  const [showInteractiveDemo, setShowInteractiveDemo] = useState(false)
+  const { visitIsland } = useAdventureMapStore()
+
+  // Track island visit when modal opens
+  React.useEffect(() => {
+    if (isOpen && island) {
+      visitIsland(island.id)
+    }
+  }, [isOpen, island, visitIsland])
+
   if (!island) return null
 
   const handleBackdropClick = (e: React.MouseEvent) => {
@@ -223,7 +235,10 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
                 
                 {island.demoConfig && (
                   <motion.button
-                    onClick={() => onDemoLaunch?.(island)}
+                    onClick={() => {
+                      setShowInteractiveDemo(true)
+                      onDemoLaunch?.(island)
+                    }}
                     className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -239,6 +254,20 @@ export const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
           </motion.div>
         </motion.div>
       )}
+
+      {/* Interactive Demo Modal */}
+      <AnimatePresence>
+        {showInteractiveDemo && island && (
+          <InteractiveDemo
+            island={island}
+            onClose={() => setShowInteractiveDemo(false)}
+            onComplete={(result: DemoInteractionResult) => {
+              console.log('Demo completed:', result)
+              setShowInteractiveDemo(false)
+            }}
+          />
+        )}
+      </AnimatePresence>
     </AnimatePresence>
   )
 }

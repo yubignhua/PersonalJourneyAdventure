@@ -93,13 +93,13 @@ const InteractiveHomepage: React.FC = () => {
   // Handle skill point clicks with enhanced particle burst
   const handleSkillClick = (skill: SkillPoint) => {
     setSelectedSkill(skill)
-    
+
     // Generate burst of particles around the clicked skill
     const burstParticles = Array.from({ length: 20 }, (_, i) => {
       const angle = (i / 20) * Math.PI * 2
       const radius = 0.5 + Math.random() * 0.5
       const speed = 0.02 + Math.random() * 0.03
-      
+
       return {
         id: `skill-burst-${skill.id}-${i}-${Date.now()}`,
         position: [
@@ -118,7 +118,7 @@ const InteractiveHomepage: React.FC = () => {
         maxLife: 2 + Math.random() * 2
       }
     })
-    
+
     // Add some trailing particles
     const trailParticles = Array.from({ length: 15 }, (_, i) => ({
       id: `skill-trail-${skill.id}-${i}-${Date.now()}`,
@@ -137,7 +137,7 @@ const InteractiveHomepage: React.FC = () => {
       life: 4 + Math.random() * 3,
       maxLife: 4 + Math.random() * 3
     }))
-    
+
     setParticles(prev => [...prev, ...burstParticles, ...trailParticles])
   }
 
@@ -151,7 +151,7 @@ const InteractiveHomepage: React.FC = () => {
       try {
         // Connect to WebSocket
         const socket = socketManager.connect()
-        
+
         socket.on('connect', () => {
           setSocketConnected(true)
           console.log('Connected to backend for real-time features')
@@ -171,7 +171,7 @@ const InteractiveHomepage: React.FC = () => {
         // Load skills from API
         const loadedSkills = await skillService.fetchSkills()
         setSkills(loadedSkills)
-        
+
         setIsLoading(false)
       } catch (error) {
         console.warn('Failed to initialize app:', error)
@@ -199,7 +199,7 @@ const InteractiveHomepage: React.FC = () => {
   const handleUnlock = useCallback(() => {
     setIsUnlocked(true)
     setShowPasswordUnlock(false)
-    
+
     // Emit unlock event to backend for particle generation
     if (socketConnected) {
       socketManager.emit('user-unlocked', { timestamp: Date.now() })
@@ -215,7 +215,7 @@ const InteractiveHomepage: React.FC = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ count: 20 })
       })
-      
+
       if (response.ok) {
         const newParticles = await response.json()
         setParticles(prev => [...prev, ...newParticles])
@@ -232,7 +232,7 @@ const InteractiveHomepage: React.FC = () => {
   useEffect(() => {
     if (isUnlocked) {
       const interval = setInterval(generateRandomParticles, 5000)
-      
+
       // Clean up old particles every 10 seconds
       const cleanupInterval = setInterval(() => {
         setParticles(prev => {
@@ -243,7 +243,7 @@ const InteractiveHomepage: React.FC = () => {
           }).slice(-200) // Keep only the latest 200 particles
         })
       }, 10000)
-      
+
       return () => {
         clearInterval(interval)
         clearInterval(cleanupInterval)
@@ -259,14 +259,14 @@ const InteractiveHomepage: React.FC = () => {
         <div className="stars-medium"></div>
         <div className="stars-large"></div>
       </div>
-      
+
       {/* 3D Scene - Only render when unlocked */}
       {isUnlocked && (
         <Canvas
           className="w-full h-full"
           camera={{ position: [0, 0, 8], fov: 60 }}
-          gl={{ 
-            antialias: true, 
+          gl={{
+            antialias: true,
             alpha: true,
             powerPreference: 'high-performance'
           }}
@@ -275,7 +275,7 @@ const InteractiveHomepage: React.FC = () => {
             {/* Lighting */}
             <ambientLight intensity={0.4} />
             <directionalLight position={[10, 10, 5]} intensity={0.8} />
-            
+
             {/* Globe with skills */}
             <Globe3D
               skills={skills}
@@ -285,7 +285,7 @@ const InteractiveHomepage: React.FC = () => {
               rotationSpeed={0.002}
               interactive={true}
             />
-            
+
             {/* Particle system */}
             <ParticleSystem
               particles={particles}
@@ -295,13 +295,13 @@ const InteractiveHomepage: React.FC = () => {
           </Suspense>
         </Canvas>
       )}
-      
+
       {/* Loading Screen */}
       {isLoading && (
         <div className="absolute inset-0 z-50 bg-black/90 flex items-center justify-center">
           <div className="text-center">
             <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4 mx-auto" />
-            <SimpleTypewriter 
+            <SimpleTypewriter
               text="Initializing Interactive Laboratory..."
               speed={50}
               className="text-blue-400 text-lg"
@@ -315,7 +315,7 @@ const InteractiveHomepage: React.FC = () => {
         <div className="absolute inset-0 z-40 bg-black/95 flex items-center justify-center">
           <div className="text-center max-w-2xl px-8">
             <div className="mb-8">
-              <SimpleTypewriter 
+              <SimpleTypewriter
                 text="Welcome to the Interactive Laboratory"
                 speed={80}
                 className="text-4xl font-bold text-white mb-4 block"
@@ -335,7 +335,7 @@ const InteractiveHomepage: React.FC = () => {
       {/* Password Unlock Screen */}
       {!isLoading && showPasswordUnlock && !isUnlocked && (
         <div className="absolute inset-0 z-30 bg-black/90 flex items-center justify-center">
-          <PasswordUnlock 
+          <PasswordUnlock
             onUnlock={handleUnlock}
             correctPassword="react"
             placeholder="Enter skill keyword..."
@@ -355,11 +355,30 @@ const InteractiveHomepage: React.FC = () => {
               Explore my skills in 3D space
             </p>
           </div>
-          
+
           <div className="mt-4 text-sm text-gray-400 space-y-1">
             <div className="block">• Click on skill points to see details</div>
             <div className="block">• Drag to rotate the globe</div>
             <div className="block">• Watch particles respond to interactions</div>
+          </div>
+
+          {/* Navigation Buttons */}
+          <div className="mt-6 space-y-3">
+            <a
+              href="/projects"
+              className="block w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 text-center"
+            >
+              🗺️ Explore Project Islands
+            </a>
+            <a
+              href="/blog"
+              className="block w-full px-4 py-3 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 text-center"
+            >
+              📚 Tech Blog & Timeline
+            </a>
+            <div className="text-xs text-gray-400 text-center">
+              Interactive demos, blog posts & achievements await!
+            </div>
           </div>
 
           {/* Connection Status */}
@@ -371,26 +390,26 @@ const InteractiveHomepage: React.FC = () => {
           </div>
         </div>
       )}
-      
+
       {/* Skill Details Panel with Enhanced Animations */}
       {isUnlocked && selectedSkill && (
         <div className="absolute top-1/2 right-8 transform -translate-y-1/2 z-10 max-w-sm animate-in slide-in-from-right-4 duration-300">
           <div className="bg-gray-900/95 backdrop-blur-sm border border-blue-500/30 rounded-lg p-4 shadow-2xl shadow-blue-500/20 transition-all duration-300 ease-out hover:shadow-blue-500/30">
             {/* Animated border glow */}
-            <div 
+            <div
               className="absolute inset-0 rounded-lg opacity-20 animate-pulse"
-              style={{ 
+              style={{
                 background: `linear-gradient(45deg, ${selectedSkill.color}20, transparent, ${selectedSkill.color}20)`,
                 filter: 'blur(1px)'
               }}
             />
-            
+
             {/* Header */}
             <div className="relative flex items-center justify-between mb-3">
               <div className="flex items-center space-x-2">
-                <div 
+                <div
                   className="w-3 h-3 rounded-full animate-pulse shadow-lg"
-                  style={{ 
+                  style={{
                     backgroundColor: selectedSkill.color,
                     boxShadow: `0 0 10px ${selectedSkill.color}50`
                   }}
@@ -406,7 +425,7 @@ const InteractiveHomepage: React.FC = () => {
                 ✕
               </button>
             </div>
-            
+
             {/* Category and Proficiency */}
             <div className="relative mb-3">
               <div className="text-xs text-blue-400 mb-1 font-medium">
@@ -414,9 +433,9 @@ const InteractiveHomepage: React.FC = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <div className="flex-1 bg-gray-700 rounded-full h-2 overflow-hidden">
-                  <div 
+                  <div
                     className="h-2 rounded-full transition-all duration-1000 ease-out relative"
-                    style={{ 
+                    style={{
                       width: `${selectedSkill.proficiencyLevel}%`,
                       background: `linear-gradient(90deg, ${selectedSkill.color}, ${selectedSkill.color}80)`
                     }}
@@ -429,12 +448,12 @@ const InteractiveHomepage: React.FC = () => {
                 </span>
               </div>
             </div>
-            
+
             {/* Description */}
             <p className="relative text-gray-300 text-xs mb-3 leading-relaxed">
               {selectedSkill.description}
             </p>
-            
+
             {/* Code Snippet with Enhanced Styling */}
             {selectedSkill.codeSnippet && (
               <div className="relative bg-black/50 rounded border border-gray-700 p-3 overflow-hidden">
@@ -447,17 +466,17 @@ const InteractiveHomepage: React.FC = () => {
                     {selectedSkill.name.toLowerCase()}.{selectedSkill.category === 'Frontend' ? 'tsx' : selectedSkill.category === 'Backend' ? 'js' : 'py'}
                   </span>
                 </div>
-                
+
                 {/* Code content */}
                 <pre className="text-xs text-green-400 font-mono overflow-x-auto relative">
                   <code>{selectedSkill.codeSnippet}</code>
-                  
+
                   {/* Typing cursor effect */}
                   <span className="inline-block w-2 h-3 bg-green-400 ml-1 animate-pulse" />
                 </pre>
-                
+
                 {/* Scan line effect */}
-                <div 
+                <div
                   className="absolute inset-0 opacity-10 pointer-events-none"
                   style={{
                     background: `linear-gradient(90deg, transparent, ${selectedSkill.color}40, transparent)`,
@@ -466,6 +485,52 @@ const InteractiveHomepage: React.FC = () => {
                 />
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Navigation Menu */}
+      {isUnlocked && (
+        <div className="absolute top-8 right-8 z-10 space-y-4">
+          {/* Main Navigation */}
+          <div className="bg-black/50 backdrop-blur-sm rounded-lg p-4 text-white">
+            <h3 className="font-semibold mb-3 text-center">Navigation</h3>
+            <div className="space-y-2">
+              <a
+                href="/projects"
+                className="block px-3 py-2 bg-purple-600/20 hover:bg-purple-600/40 rounded-lg text-sm transition-colors text-center border border-purple-500/30"
+              >
+                🗺️ Project Islands
+              </a>
+              <a
+                href="/blog"
+                className="block px-3 py-2 bg-green-600/20 hover:bg-green-600/40 rounded-lg text-sm transition-colors text-center border border-green-500/30"
+              >
+                📚 Tech Blog
+              </a>
+              <div className="px-3 py-2 bg-blue-600/20 rounded-lg text-sm text-center border border-blue-500/30">
+                🌐 Skills Lab (Current)
+              </div>
+            </div>
+          </div>
+
+          {/* Featured Blog Entry */}
+          <div className="bg-gradient-to-br from-green-900/30 to-teal-900/30 backdrop-blur-sm rounded-lg p-4 text-white border border-green-500/30 max-w-xs">
+            <div className="flex items-center space-x-2 mb-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              <span className="text-xs text-green-400 font-medium">LATEST POST</span>
+            </div>
+            <h4 className="font-semibold text-sm mb-2">Building Interactive 3D Experiences</h4>
+            <p className="text-xs text-gray-300 mb-3 leading-relaxed">
+              Learn how to create immersive 3D web experiences using React Three Fiber and modern web technologies.
+            </p>
+            <a
+              href="/blog"
+              className="inline-flex items-center space-x-1 text-xs text-green-400 hover:text-green-300 transition-colors"
+            >
+              <span>Read more</span>
+              <span>→</span>
+            </a>
           </div>
         </div>
       )}
