@@ -8,6 +8,7 @@ import PortalNavigation from './PortalNavigation'
 
 const navigationItems = [
   { id: 'home', label: 'Home', icon: '🏠', description: 'Return to homepage' },
+  { id: 'about', label: 'Personal Universe', icon: '🪐', description: 'Explore skills galaxy' },
   { id: 'lab', label: 'Interactive Lab', icon: '🧪', description: 'Explore 3D experiments' },
   { id: 'adventure', label: 'Adventure Map', icon: '🗺️', description: 'Discover project islands' },
   { id: 'blog', label: 'Tech Blog', icon: '📚', description: 'Read articles and tutorials' },
@@ -69,6 +70,12 @@ export default function Navigation() {
     if (sectionId === 'home') {
       // Navigate to home page
       window.location.href = '/'
+      return
+    }
+
+    if (sectionId === 'about') {
+      // Navigate to about page
+      window.location.href = '/about'
       return
     }
 

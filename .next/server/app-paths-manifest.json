@@ -1,12 +1,5 @@
 {
-  "/blog/create/page": "app/blog/create/page.js",
-  "/api/blog/posts/route": "app/api/blog/posts/route.js",
-  "/blog/page": "app/blog/page.js",
-  "/blog/manage/page": "app/blog/manage/page.js",
-  "/api/blog/drafts/route": "app/api/blog/drafts/route.js",
-  "/blog/edit/[slug]/page": "app/blog/edit/[slug]/page.js",
-  "/api/blog/posts/[id]/route": "app/api/blog/posts/[id]/route.js",
-  "/projects/page": "app/projects/page.js",
-  "/api/projects/map/islands/route": "app/api/projects/map/islands/route.js",
-  "/blog/[slug]/page": "app/blog/[slug]/page.js"
+  "/page": "app/page.js",
+  "/about/page": "app/about/page.js",
+  "/blog/page": "app/blog/page.js"
 }

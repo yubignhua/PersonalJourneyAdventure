@@ -365,6 +365,12 @@ const InteractiveHomepage: React.FC = () => {
           {/* Navigation Buttons */}
           <div className="mt-6 space-y-3">
             <a
+              href="/about"
+              className="block w-full px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 text-center"
+            >
+              🪐 Personal Universe
+            </a>
+            <a
               href="/projects"
               className="block w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 text-center"
             >
@@ -510,6 +516,12 @@ const InteractiveHomepage: React.FC = () => {
           <div className="bg-black/50 backdrop-blur-sm rounded-lg p-4 text-white">
             <h3 className="font-semibold mb-3 text-center">Navigation</h3>
             <div className="space-y-2">
+              <a
+                href="/about"
+                className="block px-3 py-2 bg-indigo-600/20 hover:bg-indigo-600/40 rounded-lg text-sm transition-colors text-center border border-indigo-500/30"
+              >
+                🪐 Personal Universe
+              </a>
               <a
                 href="/projects"
                 className="block px-3 py-2 bg-purple-600/20 hover:bg-purple-600/40 rounded-lg text-sm transition-colors text-center border border-purple-500/30"

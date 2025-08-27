@@ -127,3 +127,53 @@ export interface ParticleSystemProps {
     animationSpeed?: number
     interactive?: boolean
 }
+
+// Galaxy and Universe Types
+export interface SkillPlanet {
+    id: string
+    name: string
+    category: string
+    position: [number, number, number]
+    orbitRadius: number
+    orbitSpeed: number
+    size: number
+    color: string
+    proficiencyLevel: number // 0-100
+    description: string
+    technologies: string[]
+    experience: ExperienceEntry[]
+}
+
+export interface ExperienceEntry {
+    id: string
+    title: string
+    company: string
+    duration: string
+    description: string
+    technologies: string[]
+    startDate: Date
+    endDate?: Date
+}
+
+export interface GalaxyVisualizationProps {
+    skillPlanets: SkillPlanet[]
+    experiences: ExperienceEntry[]
+    onPlanetSelect: (planet: SkillPlanet) => void
+    onExperienceSelect: (experience: ExperienceEntry) => void
+    cameraPosition?: [number, number, number]
+    autoRotate?: boolean
+}
+
+export interface SkillPlanetProps {
+    planet: SkillPlanet
+    isSelected: boolean
+    onClick: (planet: SkillPlanet) => void
+    animationTime: number
+}
+
+export interface ExperienceOrbitProps {
+    experiences: ExperienceEntry[]
+    orbitRadius: number
+    onExperienceClick: (experience: ExperienceEntry) => void
+    animationTime: number
+}
