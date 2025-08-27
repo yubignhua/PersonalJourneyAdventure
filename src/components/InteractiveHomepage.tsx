@@ -376,7 +376,21 @@ const InteractiveHomepage: React.FC = () => {
             >
               📚 Tech Blog & Timeline
             </a>
-            <div className="text-xs text-gray-400 text-center">
+            <div className="flex space-x-2 mt-2">
+              <a
+                href="/blog/create"
+                className="flex-1 px-3 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-105 text-center"
+              >
+                ✍️ New Post
+              </a>
+              <a
+                href="/blog/manage"
+                className="flex-1 px-3 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-105 text-center"
+              >
+                📝 Manage
+              </a>
+            </div>
+            <div className="text-xs text-gray-400 text-center mt-2">
               Interactive demos, blog posts & achievements await!
             </div>
           </div>
@@ -508,6 +522,20 @@ const InteractiveHomepage: React.FC = () => {
               >
                 📚 Tech Blog
               </a>
+              <div className="flex space-x-1">
+                <a
+                  href="/blog/create"
+                  className="flex-1 px-2 py-1 bg-blue-600/20 hover:bg-blue-600/40 rounded text-xs transition-colors text-center border border-blue-500/30"
+                >
+                  ✍️ New
+                </a>
+                <a
+                  href="/blog/manage"
+                  className="flex-1 px-2 py-1 bg-purple-600/20 hover:bg-purple-600/40 rounded text-xs transition-colors text-center border border-purple-500/30"
+                >
+                  📝 Manage
+                </a>
+              </div>
               <div className="px-3 py-2 bg-blue-600/20 rounded-lg text-sm text-center border border-blue-500/30">
                 🌐 Skills Lab (Current)
               </div>
