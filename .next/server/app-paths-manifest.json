@@ -1,5 +1,12 @@
 {
   "/page": "app/page.js",
+  "/blog/page": "app/blog/page.js",
   "/about/page": "app/about/page.js",
-  "/blog/page": "app/blog/page.js"
+  "/blog/manage/page": "app/blog/manage/page.js",
+  "/blog/create/page": "app/blog/create/page.js",
+  "/blog/[slug]/page": "app/blog/[slug]/page.js",
+  "/api/blog/drafts/route": "app/api/blog/drafts/route.js",
+  "/api/blog/posts/route": "app/api/blog/posts/route.js",
+  "/api/blog/posts/[id]/route": "app/api/blog/posts/[id]/route.js",
+  "/blog/edit/[slug]/page": "app/blog/edit/[slug]/page.js"
 }
