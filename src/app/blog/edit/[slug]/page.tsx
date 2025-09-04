@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import BlogEditor from '@/components/blog/BlogEditor';
 import QuickNavigation from '@/components/layout/QuickNavigation';
 import LoadingSpinner from '@/components/3d/LoadingSpinner';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
 export default function EditBlogPage() {
     const router = useRouter();
@@ -116,7 +117,8 @@ export default function EditBlogPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        <ProtectedRoute adminOnly={true}>
+            <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
             {/* Navigation Header */}
             <div className="bg-black/20 backdrop-blur-sm border-b border-white/10 sticky top-0 z-50">
                 <div className="container mx-auto px-4 py-4">
@@ -147,5 +149,6 @@ export default function EditBlogPage() {
                 />
             </div>
         </div>
+        </ProtectedRoute>
     );
 }

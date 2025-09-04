@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import QuickNavigation from '@/components/layout/QuickNavigation';
 import LoadingSpinner from '@/components/3d/LoadingSpinner';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
 interface BlogPost {
     id: number;
@@ -177,7 +178,8 @@ export default function ManageBlogPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+        <ProtectedRoute adminOnly={true}>
+            <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
             {/* Navigation Header */}
             <div className="bg-black/20 backdrop-blur-sm border-b border-white/10 sticky top-0 z-50">
                 <div className="container mx-auto px-4 py-4">
@@ -264,5 +266,6 @@ export default function ManageBlogPage() {
                 </div>
             </div>
         </div>
+        </ProtectedRoute>
     );
 }

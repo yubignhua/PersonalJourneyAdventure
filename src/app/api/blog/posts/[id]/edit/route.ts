@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdmin } from '@/lib/auth-middleware';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -6,6 +7,9 @@ export async function GET(
     request: NextRequest,
     { params }: { params: { id: string } }
 ) {
+    const authError = requireAdmin(request);
+    if (authError) return authError;
+
     try {
         const response = await fetch(`${API_BASE_URL}/api/blog/posts/${params.id}/edit`, {
             method: 'GET',

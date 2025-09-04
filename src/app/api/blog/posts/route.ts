@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { useAuth } from '@/lib/auth-context';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -32,11 +33,13 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
+        const authHeader = request.headers.get('authorization');
 
         const response = await fetch(`${API_BASE_URL}/api/blog/posts`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                ...(authHeader && { Authorization: authHeader }),
             },
             body: JSON.stringify(body),
         });

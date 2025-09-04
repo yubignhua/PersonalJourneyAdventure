@@ -1,13 +1,16 @@
 'use client'
 
-import React, { useState, useEffect, Suspense, useCallback } from 'react'
+import React, { useState, useEffect, Suspense, useCallback, useMemo } from 'react'
 import { Canvas } from '@react-three/fiber'
 import Globe3D from './3d/Globe3D'
 import ParticleSystem from './3d/ParticleSystem'
 import SimpleTypewriter from './ui/SimpleTypewriter'
 import PasswordUnlock from './ui/PasswordUnlock'
+import { LoginModal } from './auth/LoginModal'
+import RegisterModal from './auth/RegisterModal'
 import { SkillPoint, ParticleData } from '@/types/3d'
 import { skillService } from '@/services/skillService'
+import { useAuth } from '@/lib/auth-context'
 
 import { socketManager } from '@/lib/socket'
 
@@ -80,6 +83,7 @@ const generateParticles = (count: number): ParticleData[] => {
 }
 
 const InteractiveHomepage: React.FC = () => {
+  const { isAuthenticated, user, logout } = useAuth()
   const [selectedSkill, setSelectedSkill] = useState<SkillPoint | null>(null)
   const [particles, setParticles] = useState<ParticleData[]>(() => generateParticles(50))
   const [skills, setSkills] = useState<SkillPoint[]>(sampleSkills)
@@ -88,7 +92,18 @@ const InteractiveHomepage: React.FC = () => {
   const [showIntro, setShowIntro] = useState(true)
   const [introComplete, setIntroComplete] = useState(false)
   const [showPasswordUnlock, setShowPasswordUnlock] = useState(false)
+  const [showLoginModal, setShowLoginModal] = useState(false)
+  const [showRegisterModal, setShowRegisterModal] = useState(false)
   const [socketConnected, setSocketConnected] = useState(false)
+
+  // Memoize expensive calculations
+  const visibleParticles = useMemo(() => {
+    return particles.slice(-200) // Keep only latest 200 particles for performance
+  }, [particles])
+
+  const sortedSkills = useMemo(() => {
+    return [...skills].sort((a, b) => b.proficiencyLevel - a.proficiencyLevel)
+  }, [skills])
 
   // Handle skill point clicks with enhanced particle burst
   const handleSkillClick = (skill: SkillPoint) => {
@@ -252,7 +267,7 @@ const InteractiveHomepage: React.FC = () => {
   }, [isUnlocked, generateRandomParticles])
 
   return (
-    <div className="relative w-full h-screen bg-gradient-to-b from-gray-900 via-blue-900 to-black overflow-hidden">
+    <div className="relative w-full h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-black overflow-hidden">
       {/* Background stars effect */}
       <div className="absolute inset-0 opacity-30">
         <div className="stars-small"></div>
@@ -278,7 +293,7 @@ const InteractiveHomepage: React.FC = () => {
 
             {/* Globe with skills */}
             <Globe3D
-              skills={skills}
+              skills={sortedSkills}
               onSkillClick={handleSkillClick}
               particleCount={50}
               radius={2.5}
@@ -288,7 +303,7 @@ const InteractiveHomepage: React.FC = () => {
 
             {/* Particle system */}
             <ParticleSystem
-              particles={particles}
+              particles={visibleParticles}
               animationSpeed={1}
               interactive={true}
             />
@@ -346,78 +361,170 @@ const InteractiveHomepage: React.FC = () => {
 
       {/* Main UI Overlay - Only show when unlocked */}
       {isUnlocked && (
-        <div className="absolute top-8 left-8 z-10">
-          <div className="mb-4">
-            <h1 className="text-4xl font-bold text-white block mb-2">
-              Interactive Laboratory
-            </h1>
-            <p className="text-blue-300 text-lg block">
-              Explore my skills in 3D space
-            </p>
-          </div>
+        <>
+          {/* Left Panel - Main Controls */}
+          <div className="absolute top-4 sm:top-8 left-4 sm:left-8 z-10 w-full sm:w-auto max-w-sm">
+            {/* Header */}
+            <div className="mb-4 sm:mb-6 px-4 sm:px-0">
+              <h1 className="text-2xl sm:text-4xl font-bold text-white mb-1 sm:mb-2 leading-tight">
+                Interactive Laboratory
+              </h1>
+              <p className="text-blue-300 text-sm sm:text-lg opacity-90">
+                Explore my skills in 3D space
+              </p>
+            </div>
 
-          <div className="mt-4 text-sm text-gray-400 space-y-1">
-            <div className="block">• Click on skill points to see details</div>
-            <div className="block">• Drag to rotate the globe</div>
-            <div className="block">• Watch particles respond to interactions</div>
-          </div>
+            {/* Instructions */}
+            <div className="mb-4 sm:mb-6 px-4 sm:px-0">
+              <div className="text-xs sm:text-sm text-gray-400 space-y-1 opacity-80">
+                <div className="flex items-center space-x-2">
+                  <span className="text-blue-400">•</span>
+                  <span>Click skill points for details</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-blue-400">•</span>
+                  <span>Drag to rotate the globe</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-blue-400">•</span>
+                  <span>Watch particles respond</span>
+                </div>
+              </div>
+            </div>
 
-          {/* Navigation Buttons */}
-          <div className="mt-6 space-y-3">
-            <a
-              href="/about"
-              className="block w-full px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 text-center"
-            >
-              🪐 Personal Universe
-            </a>
-            <a
-              href="/projects"
-              className="block w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 text-center"
-            >
-              🗺️ Explore Project Islands
-            </a>
-            <a
-              href="/blog"
-              className="block w-full px-4 py-3 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 text-center"
-            >
-              📚 Tech Blog & Timeline
-            </a>
-            <div className="flex space-x-2 mt-2">
+            {/* Navigation Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 mb-4 sm:mb-6 px-4 sm:px-0">
               <a
-                href="/blog/create"
-                className="flex-1 px-3 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-105 text-center"
+                href="/about"
+                className="group px-3 sm:px-4 py-2 sm:py-3 bg-gradient-to-r from-indigo-600/80 to-purple-600/80 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 text-center backdrop-blur-sm border border-indigo-500/30"
               >
-                ✍️ New Post
+                <span className="block text-sm sm:text-base">🪐 Personal Universe</span>
               </a>
               <a
-                href="/blog/manage"
-                className="flex-1 px-3 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-105 text-center"
+                href="/projects"
+                className="group px-3 sm:px-4 py-2 sm:py-3 bg-gradient-to-r from-purple-600/80 to-blue-600/80 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 text-center backdrop-blur-sm border border-purple-500/30"
               >
-                📝 Manage
+                <span className="block text-sm sm:text-base">🗺️ Project Islands</span>
+              </a>
+              <a
+                href="/blog"
+                className="group px-3 sm:px-4 py-2 sm:py-3 bg-gradient-to-r from-green-600/80 to-teal-600/80 hover:from-green-700 hover:to-teal-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 text-center backdrop-blur-sm border border-green-500/30"
+              >
+                <span className="block text-sm sm:text-base">📚 Tech Blog</span>
               </a>
             </div>
-            <div className="text-xs text-gray-400 text-center mt-2">
-              Interactive demos, blog posts & achievements await!
+
+            {/* Admin Actions */}
+            {isAuthenticated && user?.role === 'admin' && (
+              <div className="mb-4 sm:mb-6 px-4 sm:px-0">
+                <div className="flex space-x-2">
+                  <a
+                    href="/blog/create"
+                    className="flex-1 px-3 py-2 bg-gradient-to-r from-blue-600/70 to-indigo-600/70 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 transform hover:scale-105 text-center backdrop-blur-sm border border-blue-500/30"
+                  >
+                    ✍️ New Post
+                  </a>
+                  <a
+                    href="/blog/manage"
+                    className="flex-1 px-3 py-2 bg-gradient-to-r from-purple-600/70 to-pink-600/70 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 transform hover:scale-105 text-center backdrop-blur-sm border border-purple-500/30"
+                  >
+                    📝 Manage
+                  </a>
+                </div>
+              </div>
+            )}
+
+            {/* Authentication */}
+            <div className="mb-4 sm:mb-6 px-4 sm:px-0">
+              {isAuthenticated ? (
+                <div className="bg-green-600/20 backdrop-blur-sm border border-green-500/30 rounded-lg p-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-green-400 text-xs sm:text-sm">🔐 {user?.username}</span>
+                    <button
+                      onClick={logout}
+                      className="text-red-400 hover:text-red-300 text-xs sm:text-sm transition-colors"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                  {user?.role === 'admin' && (
+                    <div className="text-xs text-green-300 opacity-80">
+                      Admin privileges active
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <button
+                    onClick={() => setShowLoginModal(true)}
+                    className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-gradient-to-r from-red-600/80 to-pink-600/80 hover:from-red-700 hover:to-pink-700 text-white rounded-lg text-sm sm:text-base font-medium transition-all duration-300 transform hover:scale-105 text-center backdrop-blur-sm border border-red-500/30"
+                  >
+                    🔐 Admin Login
+                  </button>
+                  <button
+                    onClick={() => setShowRegisterModal(true)}
+                    className="w-full px-3 sm:px-4 py-2 bg-gradient-to-r from-blue-600/80 to-cyan-600/80 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-105 text-center backdrop-blur-sm border border-blue-500/30"
+                  >
+                    📝 Register
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Status */}
+            <div className="px-4 sm:px-0">
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center space-x-2">
+                  <div className={`w-2 h-2 rounded-full ${socketConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
+                  <span className={socketConnected ? 'text-green-400' : 'text-red-400'}>
+                    {socketConnected ? 'Live' : 'Offline'}
+                  </span>
+                </div>
+                <div className="text-gray-500 opacity-60">
+                  Interactive Lab
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Connection Status */}
-          <div className="mt-6 flex items-center space-x-2 text-xs">
-            <div className={`w-2 h-2 rounded-full ${socketConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
-            <span className={socketConnected ? 'text-green-400' : 'text-red-400'}>
-              {socketConnected ? 'Real-time Connected' : 'Offline Mode'}
-            </span>
+          {/* Mobile Bottom Navigation */}
+          <div className="sm:hidden fixed bottom-4 left-4 right-4 z-10">
+            <div className="bg-black/80 backdrop-blur-md border border-gray-700/50 rounded-xl p-3">
+              <div className="grid grid-cols-3 gap-2">
+                <a
+                  href="/about"
+                  className="flex flex-col items-center py-2 px-1 rounded-lg hover:bg-white/10 transition-colors"
+                >
+                  <span className="text-lg mb-1">🪐</span>
+                  <span className="text-xs text-gray-300">About</span>
+                </a>
+                <a
+                  href="/projects"
+                  className="flex flex-col items-center py-2 px-1 rounded-lg hover:bg-white/10 transition-colors"
+                >
+                  <span className="text-lg mb-1">🗺️</span>
+                  <span className="text-xs text-gray-300">Projects</span>
+                </a>
+                <a
+                  href="/blog"
+                  className="flex flex-col items-center py-2 px-1 rounded-lg hover:bg-white/10 transition-colors"
+                >
+                  <span className="text-lg mb-1">📚</span>
+                  <span className="text-xs text-gray-300">Blog</span>
+                </a>
+              </div>
+            </div>
           </div>
-        </div>
+        </>
       )}
 
       {/* Skill Details Panel with Enhanced Animations */}
       {isUnlocked && selectedSkill && (
-        <div className="absolute top-1/2 right-8 transform -translate-y-1/2 z-10 max-w-sm animate-in slide-in-from-right-4 duration-300">
-          <div className="bg-gray-900/95 backdrop-blur-sm border border-blue-500/30 rounded-lg p-4 shadow-2xl shadow-blue-500/20 transition-all duration-300 ease-out hover:shadow-blue-500/30">
+        <div className="absolute top-1/2 right-4 sm:right-8 transform -translate-y-1/2 z-20 max-w-xs sm:max-w-sm animate-in slide-in-from-right-4 duration-300">
+          <div className="bg-gray-900/95 backdrop-blur-sm border border-blue-500/30 rounded-xl p-4 sm:p-6 shadow-2xl shadow-blue-500/20 transition-all duration-300 ease-out hover:shadow-blue-500/30">
             {/* Animated border glow */}
             <div
-              className="absolute inset-0 rounded-lg opacity-20 animate-pulse"
+              className="absolute inset-0 rounded-xl opacity-20 animate-pulse"
               style={{
                 background: `linear-gradient(45deg, ${selectedSkill.color}20, transparent, ${selectedSkill.color}20)`,
                 filter: 'blur(1px)'
@@ -425,60 +532,63 @@ const InteractiveHomepage: React.FC = () => {
             />
 
             {/* Header */}
-            <div className="relative flex items-center justify-between mb-3">
-              <div className="flex items-center space-x-2">
+            <div className="relative flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-3">
                 <div
-                  className="w-3 h-3 rounded-full animate-pulse shadow-lg"
+                  className="w-4 h-4 rounded-full animate-pulse shadow-lg"
                   style={{
                     backgroundColor: selectedSkill.color,
-                    boxShadow: `0 0 10px ${selectedSkill.color}50`
+                    boxShadow: `0 0 12px ${selectedSkill.color}60`
                   }}
                 />
-                <h3 className="text-white font-semibold text-sm">
-                  {selectedSkill.name}
-                </h3>
+                <div>
+                  <h3 className="text-white font-semibold text-base sm:text-lg">
+                    {selectedSkill.name}
+                  </h3>
+                  <div className="text-xs text-blue-400 font-medium">
+                    {selectedSkill.category}
+                  </div>
+                </div>
               </div>
               <button
                 onClick={handleCloseSkillAnimation}
-                className="text-gray-400 hover:text-white transition-colors hover:rotate-90 duration-200"
+                className="text-gray-400 hover:text-white transition-all duration-200 hover:rotate-90 text-lg"
               >
                 ✕
               </button>
             </div>
 
-            {/* Category and Proficiency */}
-            <div className="relative mb-3">
-              <div className="text-xs text-blue-400 mb-1 font-medium">
-                {selectedSkill.category}
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="flex-1 bg-gray-700 rounded-full h-2 overflow-hidden">
-                  <div
-                    className="h-2 rounded-full transition-all duration-1000 ease-out relative"
-                    style={{
-                      width: `${selectedSkill.proficiencyLevel}%`,
-                      background: `linear-gradient(90deg, ${selectedSkill.color}, ${selectedSkill.color}80)`
-                    }}
-                  >
-                    <div className="absolute inset-0 bg-white/20 animate-pulse" />
-                  </div>
-                </div>
+            {/* Proficiency */}
+            <div className="relative mb-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-gray-400">Proficiency</span>
                 <span className="text-xs text-gray-300 font-mono">
                   {selectedSkill.proficiencyLevel}%
                 </span>
               </div>
+              <div className="flex-1 bg-gray-800 rounded-full h-2.5 overflow-hidden">
+                <div
+                  className="h-full rounded-full transition-all duration-1000 ease-out relative"
+                  style={{
+                    width: `${selectedSkill.proficiencyLevel}%`,
+                    background: `linear-gradient(90deg, ${selectedSkill.color}, ${selectedSkill.color}80)`
+                  }}
+                >
+                  <div className="absolute inset-0 bg-white/20 animate-pulse" />
+                </div>
+              </div>
             </div>
 
             {/* Description */}
-            <p className="relative text-gray-300 text-xs mb-3 leading-relaxed">
+            <p className="relative text-gray-300 text-sm mb-4 leading-relaxed">
               {selectedSkill.description}
             </p>
 
             {/* Code Snippet with Enhanced Styling */}
             {selectedSkill.codeSnippet && (
-              <div className="relative bg-black/50 rounded border border-gray-700 p-3 overflow-hidden">
+              <div className="relative bg-black/60 rounded-lg border border-gray-700 p-3 sm:p-4 overflow-hidden">
                 {/* Terminal header */}
-                <div className="flex items-center space-x-1 mb-2">
+                <div className="flex items-center space-x-1.5 mb-3">
                   <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
                   <div className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse" style={{ animationDelay: '0.2s' }} />
                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" style={{ animationDelay: '0.4s' }} />
@@ -488,11 +598,9 @@ const InteractiveHomepage: React.FC = () => {
                 </div>
 
                 {/* Code content */}
-                <pre className="text-xs text-green-400 font-mono overflow-x-auto relative">
+                <pre className="text-xs text-green-400 font-mono overflow-x-auto relative leading-relaxed">
                   <code>{selectedSkill.codeSnippet}</code>
-
-                  {/* Typing cursor effect */}
-                  <span className="inline-block w-2 h-3 bg-green-400 ml-1 animate-pulse" />
+                  <span className="inline-block w-2 h-4 bg-green-400 ml-1 animate-pulse align-middle" />
                 </pre>
 
                 {/* Scan line effect */}
@@ -509,89 +617,120 @@ const InteractiveHomepage: React.FC = () => {
         </div>
       )}
 
-      {/* Navigation Menu */}
+      {/* Right Side Panel - Desktop Only */}
       {isUnlocked && (
-        <div className="absolute top-8 right-8 z-10 space-y-4">
-          {/* Main Navigation */}
-          <div className="bg-black/50 backdrop-blur-sm rounded-lg p-4 text-white">
-            <h3 className="font-semibold mb-3 text-center">Navigation</h3>
-            <div className="space-y-2">
-              <a
-                href="/about"
-                className="block px-3 py-2 bg-indigo-600/20 hover:bg-indigo-600/40 rounded-lg text-sm transition-colors text-center border border-indigo-500/30"
-              >
-                🪐 Personal Universe
-              </a>
-              <a
-                href="/projects"
-                className="block px-3 py-2 bg-purple-600/20 hover:bg-purple-600/40 rounded-lg text-sm transition-colors text-center border border-purple-500/30"
-              >
-                🗺️ Project Islands
-              </a>
-              <a
-                href="/blog"
-                className="block px-3 py-2 bg-green-600/20 hover:bg-green-600/40 rounded-lg text-sm transition-colors text-center border border-green-500/30"
-              >
-                📚 Tech Blog
-              </a>
-              <div className="flex space-x-1">
-                <a
-                  href="/blog/create"
-                  className="flex-1 px-2 py-1 bg-blue-600/20 hover:bg-blue-600/40 rounded text-xs transition-colors text-center border border-blue-500/30"
-                >
-                  ✍️ New
-                </a>
-                <a
-                  href="/blog/manage"
-                  className="flex-1 px-2 py-1 bg-purple-600/20 hover:bg-purple-600/40 rounded text-xs transition-colors text-center border border-purple-500/30"
-                >
-                  📝 Manage
-                </a>
-              </div>
-              <div className="px-3 py-2 bg-blue-600/20 rounded-lg text-sm text-center border border-blue-500/30">
-                🌐 Skills Lab (Current)
-              </div>
-            </div>
-          </div>
-
+        <div className="hidden lg:block absolute top-8 right-8 z-10 w-80 space-y-4">
           {/* Featured Blog Entry */}
-          <div className="bg-gradient-to-br from-green-900/30 to-teal-900/30 backdrop-blur-sm rounded-lg p-4 text-white border border-green-500/30 max-w-xs">
-            <div className="flex items-center space-x-2 mb-2">
+          <div className="bg-gradient-to-br from-green-900/30 to-teal-900/30 backdrop-blur-sm rounded-xl p-5 text-white border border-green-500/30 hover:border-green-500/50 transition-all duration-300">
+            <div className="flex items-center space-x-2 mb-3">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              <span className="text-xs text-green-400 font-medium">LATEST POST</span>
+              <span className="text-xs text-green-400 font-medium uppercase tracking-wider">Latest Post</span>
             </div>
-            <h4 className="font-semibold text-sm mb-2">Building Interactive 3D Experiences</h4>
-            <p className="text-xs text-gray-300 mb-3 leading-relaxed">
+            <h4 className="font-semibold text-base mb-3 leading-tight">Building Interactive 3D Experiences</h4>
+            <p className="text-xs text-gray-300 mb-4 leading-relaxed">
               Learn how to create immersive 3D web experiences using React Three Fiber and modern web technologies.
             </p>
             <a
               href="/blog"
-              className="inline-flex items-center space-x-1 text-xs text-green-400 hover:text-green-300 transition-colors"
+              className="inline-flex items-center space-x-2 text-xs text-green-400 hover:text-green-300 transition-colors group"
             >
               <span>Read more</span>
-              <span>→</span>
+              <span className="transform group-hover:translate-x-1 transition-transform duration-200">→</span>
             </a>
+          </div>
+
+          {/* Quick Stats */}
+          <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 border border-gray-700/50">
+            <div className="grid grid-cols-2 gap-4 text-center">
+              <div>
+                <div className="text-2xl font-bold text-blue-400 mb-1">{skills.length}</div>
+                <div className="text-xs text-gray-400">Skills</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-green-400 mb-1">{visibleParticles.length}</div>
+                <div className="text-xs text-gray-400">Particles</div>
+              </div>
+            </div>
           </div>
         </div>
       )}
 
-      {/* Performance indicator */}
+      {/* Performance Indicator - Mobile Optimized */}
       {isUnlocked && (
-        <div className="absolute bottom-8 right-8 z-10">
-          <div className="bg-black/50 backdrop-blur-sm rounded-lg p-3 text-white text-xs">
+        <div className="lg:hidden fixed bottom-20 right-4 z-10">
+          <div className="bg-black/60 backdrop-blur-sm rounded-lg p-2 text-white text-xs border border-gray-700/50">
             <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              <span>3D Scene Active</span>
-            </div>
-            <div className="flex items-center space-x-2 mt-1">
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
-              <span>Particles: {particles.length}</span>
+              <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
+              <span className="opacity-80">Active</span>
             </div>
           </div>
         </div>
       )}
+
+      {/* Login Modal */}
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onSwitchToRegister={() => {
+          setShowLoginModal(false)
+          setShowRegisterModal(true)
+        }}
+      />
+
+      {/* Register Modal */}
+      <RegisterModal
+        isOpen={showRegisterModal}
+        onClose={() => setShowRegisterModal(false)}
+        onSwitchToLogin={() => {
+          setShowRegisterModal(false)
+          setShowLoginModal(true)
+        }}
+      />
     </div>
   )
+}
+
+// Add custom CSS animations
+const customStyles = `
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  @keyframes glow {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+  
+  @keyframes slideIn {
+    from { 
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .float-animation {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .glow-animation {
+    animation: glow 2s ease-in-out infinite;
+  }
+  
+  .slide-in-animation {
+    animation: slideIn 0.5s ease-out;
+  }
+`;
+
+// Inject styles into document head
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement('style');
+  styleSheet.textContent = customStyles;
+  document.head.appendChild(styleSheet);
 }
 
 export default InteractiveHomepage

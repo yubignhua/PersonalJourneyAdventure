@@ -4,8 +4,11 @@ import { Suspense } from 'react';
 import BlogTimeline from '@/components/blog/BlogTimeline';
 import LoadingSpinner from '@/components/3d/LoadingSpinner';
 import QuickNavigation from '@/components/layout/QuickNavigation';
+import { useAuth } from '@/lib/auth-context';
 
 export default function BlogPage() {
+  const { isAuthenticated, user } = useAuth();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Navigation Header */}
@@ -17,18 +20,22 @@ export default function BlogPage() {
             </div>
 
             <div className="flex items-center space-x-4">
-              <button
-                onClick={() => window.location.href = '/blog/manage'}
-                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors text-sm"
-              >
-                📝 Manage
-              </button>
-              <button
-                onClick={() => window.location.href = '/blog/create'}
-                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors text-sm"
-              >
-                ✍️ New Post
-              </button>
+              {isAuthenticated && user?.role === 'admin' && (
+                <>
+                  <button
+                    onClick={() => window.location.href = '/blog/manage'}
+                    className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors text-sm"
+                  >
+                    📝 Manage
+                  </button>
+                  <button
+                    onClick={() => window.location.href = '/blog/create'}
+                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors text-sm"
+                  >
+                    ✍️ New Post
+                  </button>
+                </>
+              )}
               <QuickNavigation currentPage="blog" />
             </div>
           </div>
