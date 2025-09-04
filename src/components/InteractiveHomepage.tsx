@@ -6,6 +6,7 @@ import Globe3D from './3d/Globe3D'
 import ParticleSystem from './3d/ParticleSystem'
 import SimpleTypewriter from './ui/SimpleTypewriter'
 import PasswordUnlock from './ui/PasswordUnlock'
+import NavigationBar from './layout/NavigationBar'
 import { LoginModal } from './auth/LoginModal'
 import RegisterModal from './auth/RegisterModal'
 import { SkillPoint, ParticleData } from '@/types/3d'
@@ -267,7 +268,16 @@ const InteractiveHomepage: React.FC = () => {
   }, [isUnlocked, generateRandomParticles])
 
   return (
-    <div className="relative w-full h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-black overflow-hidden">
+    <div className="relative w-full min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-black overflow-hidden">
+      {/* Navigation Bar */}
+      <NavigationBar
+        isAuthenticated={isAuthenticated}
+        user={user}
+        onLogin={() => setShowLoginModal(true)}
+        onRegister={() => setShowRegisterModal(true)}
+        onLogout={logout}
+      />
+
       {/* Background stars effect */}
       <div className="absolute inset-0 opacity-30">
         <div className="stars-small"></div>
@@ -360,163 +370,6 @@ const InteractiveHomepage: React.FC = () => {
       )}
 
       {/* Main UI Overlay - Only show when unlocked */}
-      {isUnlocked && (
-        <>
-          {/* Left Panel - Main Controls */}
-          <div className="absolute top-4 sm:top-8 left-4 sm:left-8 z-10 w-full sm:w-auto max-w-sm">
-            {/* Header */}
-            <div className="mb-4 sm:mb-6 px-4 sm:px-0">
-              <h1 className="text-2xl sm:text-4xl font-bold text-white mb-1 sm:mb-2 leading-tight">
-                Interactive Laboratory
-              </h1>
-              <p className="text-blue-300 text-sm sm:text-lg opacity-90">
-                Explore my skills in 3D space
-              </p>
-            </div>
-
-            {/* Instructions */}
-            <div className="mb-4 sm:mb-6 px-4 sm:px-0">
-              <div className="text-xs sm:text-sm text-gray-400 space-y-1 opacity-80">
-                <div className="flex items-center space-x-2">
-                  <span className="text-blue-400">•</span>
-                  <span>Click skill points for details</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-blue-400">•</span>
-                  <span>Drag to rotate the globe</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-blue-400">•</span>
-                  <span>Watch particles respond</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Navigation Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3 mb-4 sm:mb-6 px-4 sm:px-0">
-              <a
-                href="/about"
-                className="group px-3 sm:px-4 py-2 sm:py-3 bg-gradient-to-r from-indigo-600/80 to-purple-600/80 hover:from-indigo-700 hover:to-purple-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 text-center backdrop-blur-sm border border-indigo-500/30"
-              >
-                <span className="block text-sm sm:text-base">🪐 Personal Universe</span>
-              </a>
-              <a
-                href="/projects"
-                className="group px-3 sm:px-4 py-2 sm:py-3 bg-gradient-to-r from-purple-600/80 to-blue-600/80 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 text-center backdrop-blur-sm border border-purple-500/30"
-              >
-                <span className="block text-sm sm:text-base">🗺️ Project Islands</span>
-              </a>
-              <a
-                href="/blog"
-                className="group px-3 sm:px-4 py-2 sm:py-3 bg-gradient-to-r from-green-600/80 to-teal-600/80 hover:from-green-700 hover:to-teal-700 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 text-center backdrop-blur-sm border border-green-500/30"
-              >
-                <span className="block text-sm sm:text-base">📚 Tech Blog</span>
-              </a>
-            </div>
-
-            {/* Admin Actions */}
-            {isAuthenticated && user?.role === 'admin' && (
-              <div className="mb-4 sm:mb-6 px-4 sm:px-0">
-                <div className="flex space-x-2">
-                  <a
-                    href="/blog/create"
-                    className="flex-1 px-3 py-2 bg-gradient-to-r from-blue-600/70 to-indigo-600/70 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 transform hover:scale-105 text-center backdrop-blur-sm border border-blue-500/30"
-                  >
-                    ✍️ New Post
-                  </a>
-                  <a
-                    href="/blog/manage"
-                    className="flex-1 px-3 py-2 bg-gradient-to-r from-purple-600/70 to-pink-600/70 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 transform hover:scale-105 text-center backdrop-blur-sm border border-purple-500/30"
-                  >
-                    📝 Manage
-                  </a>
-                </div>
-              </div>
-            )}
-
-            {/* Authentication */}
-            <div className="mb-4 sm:mb-6 px-4 sm:px-0">
-              {isAuthenticated ? (
-                <div className="bg-green-600/20 backdrop-blur-sm border border-green-500/30 rounded-lg p-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-green-400 text-xs sm:text-sm">🔐 {user?.username}</span>
-                    <button
-                      onClick={logout}
-                      className="text-red-400 hover:text-red-300 text-xs sm:text-sm transition-colors"
-                    >
-                      Logout
-                    </button>
-                  </div>
-                  {user?.role === 'admin' && (
-                    <div className="text-xs text-green-300 opacity-80">
-                      Admin privileges active
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="space-y-2">
-                  <button
-                    onClick={() => setShowLoginModal(true)}
-                    className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-gradient-to-r from-red-600/80 to-pink-600/80 hover:from-red-700 hover:to-pink-700 text-white rounded-lg text-sm sm:text-base font-medium transition-all duration-300 transform hover:scale-105 text-center backdrop-blur-sm border border-red-500/30"
-                  >
-                    🔐 Admin Login
-                  </button>
-                  <button
-                    onClick={() => setShowRegisterModal(true)}
-                    className="w-full px-3 sm:px-4 py-2 bg-gradient-to-r from-blue-600/80 to-cyan-600/80 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-105 text-center backdrop-blur-sm border border-blue-500/30"
-                  >
-                    📝 Register
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Status */}
-            <div className="px-4 sm:px-0">
-              <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center space-x-2">
-                  <div className={`w-2 h-2 rounded-full ${socketConnected ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`} />
-                  <span className={socketConnected ? 'text-green-400' : 'text-red-400'}>
-                    {socketConnected ? 'Live' : 'Offline'}
-                  </span>
-                </div>
-                <div className="text-gray-500 opacity-60">
-                  Interactive Lab
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Mobile Bottom Navigation */}
-          <div className="sm:hidden fixed bottom-4 left-4 right-4 z-10">
-            <div className="bg-black/80 backdrop-blur-md border border-gray-700/50 rounded-xl p-3">
-              <div className="grid grid-cols-3 gap-2">
-                <a
-                  href="/about"
-                  className="flex flex-col items-center py-2 px-1 rounded-lg hover:bg-white/10 transition-colors"
-                >
-                  <span className="text-lg mb-1">🪐</span>
-                  <span className="text-xs text-gray-300">About</span>
-                </a>
-                <a
-                  href="/projects"
-                  className="flex flex-col items-center py-2 px-1 rounded-lg hover:bg-white/10 transition-colors"
-                >
-                  <span className="text-lg mb-1">🗺️</span>
-                  <span className="text-xs text-gray-300">Projects</span>
-                </a>
-                <a
-                  href="/blog"
-                  className="flex flex-col items-center py-2 px-1 rounded-lg hover:bg-white/10 transition-colors"
-                >
-                  <span className="text-lg mb-1">📚</span>
-                  <span className="text-xs text-gray-300">Blog</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
 
       {/* Skill Details Panel with Enhanced Animations */}
       {isUnlocked && selectedSkill && (
