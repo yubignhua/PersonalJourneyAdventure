@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { BlogPost } from '@/types/blog';
 import Link from 'next/link';
+import MarkdownPreview from './MarkdownPreview';
 
 interface BlogPostViewerProps {
   post: BlogPost;
@@ -141,12 +142,7 @@ export default function BlogPostViewer({ post }: BlogPostViewerProps) {
           className="max-w-4xl mx-auto"
         >
           {/* Main Content */}
-          <div className="prose prose-invert prose-lg max-w-none mb-12">
-            <div 
-              className="text-gray-300 leading-relaxed"
-              dangerouslySetInnerHTML={{ __html: post.content }}
-            />
-          </div>
+          <MarkdownPreview content={post.content} />
 
           {/* Code Examples Section */}
           {post.code_examples && post.code_examples.length > 0 && (

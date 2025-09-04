@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import MarkdownPreview from './MarkdownPreview';
 
 interface BlogPost {
     id?: number;
@@ -45,6 +46,7 @@ export default function BlogEditor({ initialData, onSave, isLoading, mode }: Blo
 
     const [tagInput, setTagInput] = useState('');
     const [showChallenge, setShowChallenge] = useState(false);
+    const [editorMode, setEditorMode] = useState<'write' | 'preview'>('write');
     const [codeExample, setCodeExample] = useState({
         language: 'javascript',
         code: '',
@@ -143,17 +145,42 @@ export default function BlogEditor({ initialData, onSave, isLoading, mode }: Blo
 
                 {/* Content */}
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-                    <label className="block text-white text-sm font-medium mb-2">
-                        Content *
-                    </label>
-                    <textarea
-                        value={formData.content}
-                        onChange={(e) => handleInputChange('content', e.target.value)}
-                        rows={15}
-                        className="w-full px-4 py-3 bg-black/20 border border-white/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-vertical"
-                        placeholder="Write your blog post content here... (Markdown supported)"
-                        required
-                    />
+                    <div className="flex justify-between items-center mb-2">
+                        <label className="block text-white text-sm font-medium">
+                            Content *
+                        </label>
+                        <div className="flex space-x-1 bg-black/20 p-1 rounded-lg">
+                            <button
+                                type="button"
+                                onClick={() => setEditorMode('write')}
+                                className={`px-3 py-1 text-sm rounded-md transition-colors ${editorMode === 'write' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-white/10'}`}
+                            >
+                                Write
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setEditorMode('preview')}
+                                className={`px-3 py-1 text-sm rounded-md transition-colors ${editorMode === 'preview' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:bg-white/10'}`}
+                            >
+                                Preview
+                            </button>
+                        </div>
+                    </div>
+
+                    {editorMode === 'write' ? (
+                        <textarea
+                            value={formData.content}
+                            onChange={(e) => handleInputChange('content', e.target.value)}
+                            rows={15}
+                            className="w-full px-4 py-3 bg-black/20 border border-white/30 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-vertical"
+                            placeholder="Write your blog post content here... (Markdown supported)"
+                            required
+                        />
+                    ) : (
+                        <div className="w-full px-4 py-3 bg-black/20 border border-white/30 rounded-lg text-white min-h-[300px]">
+                            <MarkdownPreview content={formData.content} />
+                        </div>
+                    )}
                 </div>
 
                 {/* Excerpt */}
