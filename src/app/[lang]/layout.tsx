@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '../../globals.css' // Corrected path
-import { getDictionary } from '@/lib/dictionaries' // Import getDictionary
+// import { getDictionary } from '@/lib/dictionaries' // Import getDictionary
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,7 +17,7 @@ export default async function RootLayout({
   children: React.ReactNode,
   params: { lang: string }
 }) {
-  const dictionary = await getDictionary(lang) // Get dictionary based on lang
+  // const dictionary = await getDictionary(lang) // Get dictionary based on lang
 
   return (
     <html lang={lang}> {/* Use lang prop here */}

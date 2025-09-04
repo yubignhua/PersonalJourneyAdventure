@@ -26,7 +26,7 @@ const PasswordUnlock: React.FC<PasswordUnlockProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (password.toLowerCase() === correctPassword.toLowerCase()) {
       setIsUnlocked(true)
       setTimeout(() => {
@@ -36,12 +36,12 @@ const PasswordUnlock: React.FC<PasswordUnlockProps> = ({
       setShowError(true)
       setAttempts(prev => prev + 1)
       setPassword('')
-      
+
       // Show hint after 2 failed attempts
       if (attempts >= 1) {
         setShowHint(true)
       }
-      
+
       setTimeout(() => {
         setShowError(false)
       }, 2000)
@@ -57,7 +57,7 @@ const PasswordUnlock: React.FC<PasswordUnlockProps> = ({
     return (
       <div className={`text-center ${className}`}>
         <div className="text-green-400 text-lg mb-4">
-          <SimpleTypewriter 
+          <SimpleTypewriter
             text="Access Granted. Welcome to the Lab."
             speed={50}
           />
@@ -93,8 +93,8 @@ const PasswordUnlock: React.FC<PasswordUnlockProps> = ({
                 w-full px-4 py-3 bg-black/50 border rounded-lg text-white
                 placeholder-gray-400 focus:outline-none focus:ring-2
                 transition-all duration-200
-                ${showError 
-                  ? 'border-red-500 focus:ring-red-500/50' 
+                ${showError
+                  ? 'border-red-500 focus:ring-red-500/50'
                   : 'border-gray-600 focus:border-blue-500 focus:ring-blue-500/50'
                 }
               `}
