@@ -70,11 +70,11 @@ const BlogEntryCard: React.FC<BlogEntryCardProps> = ({
                     <div className="space-y-2 mb-4">
                         <div className="flex items-center text-xs text-gray-400">
                             <span className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse" />
-                            Latest: "Building Interactive 3D Experiences with React"
+                            Latest: &quot;Building Interactive 3D Experiences with React&quot;
                         </div>
                         <div className="flex items-center text-xs text-gray-400">
                             <span className="w-2 h-2 bg-teal-500 rounded-full mr-2 animate-pulse" />
-                            Series: "Modern Frontend Architecture"
+                            Series: &quot;Modern Frontend Architecture&quot;
                         </div>
                     </div>
 

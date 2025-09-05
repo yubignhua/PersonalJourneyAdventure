@@ -7,10 +7,30 @@ import QuickNavigation from '@/components/layout/QuickNavigation';
 import LoadingSpinner from '@/components/3d/LoadingSpinner';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
+interface Post {
+    id?: number;
+    title: string;
+    content: string;
+    excerpt: string;
+    tags: string[];
+    code_examples: Array<{
+        language: string;
+        code: string;
+        description?: string;
+    }>;
+    challenge?: {
+        question: string;
+        answer: string;
+        hint: string;
+    } | null;
+    status: 'draft' | 'published';
+    featured: boolean;
+}
+
 export default function EditBlogPage() {
     const router = useRouter();
     const params = useParams();
-    const [post, setPost] = useState(null);
+    const [post, setPost] = useState<Post | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingPost, setIsLoadingPost] = useState(true);
 
@@ -43,6 +63,9 @@ export default function EditBlogPage() {
     const handleSave = async (postData: any) => {
         setIsLoading(true);
         try {
+            if (!post) {
+                throw new Error('Post not found');
+            }
             const response = await fetch(`/api/blog/posts/${post.id}`, {
                 method: 'PUT',
                 headers: {
@@ -69,6 +92,11 @@ export default function EditBlogPage() {
 
     const handleDelete = async () => {
         if (!confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+            return;
+        }
+
+        if (!post) {
+            alert('Post not found');
             return;
         }
 

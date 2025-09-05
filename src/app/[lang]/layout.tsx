@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import '../../globals.css' // Corrected path
+// import '../../globals.css' // Corrected path
 // import { getDictionary } from '@/lib/dictionaries' // Import getDictionary
 
 const inter = Inter({ subsets: ['latin'] })

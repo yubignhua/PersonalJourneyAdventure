@@ -52,7 +52,7 @@ class Scene3DErrorBoundaryWrapper extends Component<Props, State> {
                         </div>
                         <h3 className="text-xl font-semibold mb-2">3D Rendering Error</h3>
                         <p className="text-gray-300 mb-4">
-                            We encountered an issue with 3D rendering. Don't worry - you can still explore the content in 2D mode.
+                            We encountered an issue with 3D rendering. Don&apos;t worry - you can still explore the content in 2D mode.
                         </p>
                         <div className="flex gap-3 justify-center">
                             <button

@@ -8,12 +8,12 @@ import { ConnectionLineProps } from '@/types/3d'
 const ConnectionLine: React.FC<ConnectionLineProps> = ({
   start,
   end,
-  color,
-  opacity,
+  color = '#ffffff',
+  opacity = 1,
   animated = true
 }) => {
-  const lineRef = useRef(null)
-  const particlesRef = useRef(null)
+  const lineRef = useRef<THREE.Line>(null)
+  const particlesRef = useRef<THREE.Points>(null)
   
   // Create curved path between points
   const curveGeometry = useMemo(() => {
@@ -52,7 +52,7 @@ const ConnectionLine: React.FC<ConnectionLineProps> = ({
     return new THREE.LineBasicMaterial({
       color: new THREE.Color(color),
       transparent: true,
-      opacity: opacity * 0.6,
+      opacity: (opacity || 1) * 0.6,
       linewidth: 2
     })
   }, [color, opacity])
@@ -63,7 +63,7 @@ const ConnectionLine: React.FC<ConnectionLineProps> = ({
       color: new THREE.Color(color),
       size: 0.02,
       transparent: true,
-      opacity: opacity * 0.8,
+      opacity: (opacity || 1) * 0.8,
       blending: THREE.AdditiveBlending
     })
   }, [color, opacity])
@@ -73,7 +73,7 @@ const ConnectionLine: React.FC<ConnectionLineProps> = ({
     if (!animated || !lineRef.current || !particlesRef.current) return
     
     // Animate line opacity
-    const pulseOpacity = opacity * (0.4 + Math.sin(state.clock.elapsedTime * 2) * 0.2)
+    const pulseOpacity = (opacity || 1) * (0.4 + Math.sin(state.clock.elapsedTime * 2) * 0.2)
     lineMaterial.opacity = pulseOpacity
     
     // Animate particles along the line

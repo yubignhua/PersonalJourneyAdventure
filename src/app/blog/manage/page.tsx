@@ -253,7 +253,7 @@ export default function ManageBlogPage() {
                             <div className="text-center py-12">
                                 <div className="text-6xl mb-4">📄</div>
                                 <h3 className="text-xl font-semibold text-white mb-2">No drafts</h3>
-                                <p className="text-gray-400 mb-6">All your posts are published or you haven't started any drafts yet.</p>
+                                <p className="text-gray-400 mb-6">All your posts are published or you haven&apos;t started any drafts yet.</p>
                                 <button
                                     onClick={() => router.push('/blog/create')}
                                     className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"

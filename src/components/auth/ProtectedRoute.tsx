@@ -50,7 +50,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
         <div className="text-center text-white">
           <h2 className="text-2xl font-bold mb-4">Admin Access Required</h2>
-          <p className="text-gray-300 mb-6">You don't have permission to access this page.</p>
+          <p className="text-gray-300 mb-6">You don&apos;t have permission to access this page.</p>
           <button 
             onClick={() => window.location.href = '/'}
             className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"

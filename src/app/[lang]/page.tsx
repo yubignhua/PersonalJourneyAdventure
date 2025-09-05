@@ -18,7 +18,7 @@ const InteractiveHomepage = dynamic(
   }
 )
 
-export default async function Home({ params: { lang } }: { params: { lang: string } }) {
+export default function Home({ params: { lang } }: { params: { lang: string } }) {
   // const dictionary = await getDictionary(lang) // Get dictionary based on lang
   // You can now pass dictionary to InteractiveHomepage or use it here
   return <InteractiveHomepage />

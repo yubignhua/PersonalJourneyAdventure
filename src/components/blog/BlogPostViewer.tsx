@@ -216,7 +216,7 @@ export default function BlogPostViewer({ post }: BlogPostViewerProps) {
                 </div>
                 
                 <div className="mt-4 text-sm text-gray-400">
-                  💡 Stuck? There's a hint available after your first attempt.
+                  💡 Stuck? There&apos;s a hint available after your first attempt.
                 </div>
               </div>
             </motion.div>

@@ -25,6 +25,6 @@ export type { OptimizedMeshProps } from './OptimizedMesh'
 
 // Galaxy and Universe Components
 export { default as GalaxyVisualization } from './GalaxyVisualization'
-export type { GalaxyVisualizationProps } from '../../../types/3d'
+export type { GalaxyVisualizationProps } from '@/types/3d'
 
 export { default as PlanetDetailModal } from './PlanetDetailModal'

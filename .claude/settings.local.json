@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Read(//Users/yubh/workspace/personalSite/node-express-mysql/**)"
+      "Read(//Users/yubh/workspace/personalSite/node-express-mysql/**)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []

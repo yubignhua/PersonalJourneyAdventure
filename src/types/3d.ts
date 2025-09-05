@@ -72,6 +72,15 @@ export interface Scene3DManagerProps {
     className?: string
 }
 
+// Connection Line Types
+export interface ConnectionLineProps {
+  start: [number, number, number]
+  end: [number, number, number]
+  color?: string
+  opacity?: number
+  animated?: boolean
+}
+
 // Hook Types
 export interface Scene3DState {
     isLoaded: boolean
@@ -176,4 +185,11 @@ export interface ExperienceOrbitProps {
     orbitRadius: number
     onExperienceClick: (experience: ExperienceEntry) => void
     animationTime: number
+}
+
+export interface PuzzleCard3DProps {
+    skill: SkillPoint
+    onClick?: (skill: SkillPoint) => void
+    isSelected?: boolean
+    position?: [number, number, number]
 }
