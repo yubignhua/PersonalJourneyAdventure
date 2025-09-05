@@ -1,4 +1,10 @@
 /** @type {import('next').NextConfig} */
+
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL
+const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL
+
+console.log('NEXT_PUBLIC_BACKEND_URL:', backendUrl)
+console.log('NEXT_PUBLIC_SOCKET_URL:', socketUrl)
 const nextConfig = {
   transpilePackages: ['three'],
   typescript: {
@@ -17,7 +23,8 @@ const nextConfig = {
     return config;
   },
   env: {
-    NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
+    NEXT_PUBLIC_BACKEND_URL: backendUrl,
+    NEXT_PUBLIC_SOCKET_URL: socketUrl,
   },
 }
 
