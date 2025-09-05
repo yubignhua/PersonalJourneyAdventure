@@ -77,8 +77,8 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
       <nav className={`
         fixed top-0 left-0 right-0 z-50 transition-all duration-300
         ${isScrolled 
-          ? 'bg-gray-900/95 backdrop-blur-md border-b border-gray-700/50 shadow-lg' 
-          : 'bg-gradient-to-b from-gray-900/80 via-gray-900/60 to-transparent backdrop-blur-sm'
+          ? 'bg-gray-900/98 backdrop-blur-md border-b border-blue-500/30 shadow-xl shadow-blue-500/10' 
+          : 'bg-gradient-to-b from-gray-900/90 via-gray-900/70 to-transparent backdrop-blur-sm border-b border-blue-500/20'
         }
       `}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -105,8 +105,8 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                   className={`
                     group relative px-4 py-2 rounded-lg transition-all duration-200
                     ${isActive(item.href)
-                      ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
-                      : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
+                      ? 'bg-blue-600/25 text-blue-300 border border-blue-500/50 shadow-lg shadow-blue-500/20'
+                      : 'text-gray-300 hover:text-white hover:bg-gray-800/50 hover:border-gray-600/50 border border-transparent'
                     }
                   `}
                 >
@@ -128,7 +128,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
             <div className="hidden lg:flex items-center space-x-3">
               {isAuthenticated ? (
                 <div className="flex items-center space-x-3">
-                  <div className="bg-green-600/20 border border-green-500/30 rounded-lg px-3 py-2">
+                  <div className="bg-green-600/25 border border-green-500/50 rounded-lg px-3 py-2 shadow-lg shadow-green-500/10">
                     <div className="flex items-center space-x-2">
                       <span className="text-green-400 text-sm">🔐 {user?.username}</span>
                       {user?.role === 'admin' && (
@@ -147,13 +147,13 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={onLogin}
-                    className="px-4 py-2 bg-gradient-to-r from-red-600/80 to-pink-600/80 hover:from-red-700 hover:to-pink-700 text-white rounded-lg font-medium transition-all duration-200 transform hover:scale-105 backdrop-blur-sm border border-red-500/30"
+                    className="px-4 py-2 bg-gradient-to-r from-red-600/80 to-pink-600/80 hover:from-red-700 hover:to-pink-700 text-white rounded-lg font-medium transition-all duration-200 transform hover:scale-105 backdrop-blur-sm border border-red-500/50 shadow-lg shadow-red-500/20"
                   >
                     🔐 Login
                   </button>
                   <button
                     onClick={onRegister}
-                    className="px-4 py-2 bg-gradient-to-r from-blue-600/80 to-cyan-600/80 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg font-medium transition-all duration-200 transform hover:scale-105 backdrop-blur-sm border border-blue-500/30"
+                    className="px-4 py-2 bg-gradient-to-r from-blue-600/80 to-cyan-600/80 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg font-medium transition-all duration-200 transform hover:scale-105 backdrop-blur-sm border border-blue-500/50 shadow-lg shadow-blue-500/20"
                   >
                     📝 Register
                   </button>
@@ -181,7 +181,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden bg-gray-900/95 backdrop-blur-md border-t border-gray-700/50">
+          <div className="lg:hidden bg-gray-900/98 backdrop-blur-md border-t border-blue-500/30 shadow-lg shadow-blue-500/10">
             <div className="px-4 py-4 space-y-2">
               {navigationItems.map((item) => (
                 <a
@@ -190,8 +190,8 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                   className={`
                     flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200
                     ${isActive(item.href)
-                      ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
-                      : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
+                      ? 'bg-blue-600/25 text-blue-300 border border-blue-500/50 shadow-lg shadow-blue-500/20'
+                      : 'text-gray-300 hover:text-white hover:bg-gray-800/50 hover:border-gray-600/50 border border-transparent'
                     }
                   `}
                 >
@@ -207,7 +207,7 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
               <div className="border-t border-gray-700/50 pt-4 mt-4">
                 {isAuthenticated ? (
                   <div className="space-y-3">
-                    <div className="bg-green-600/20 border border-green-500/30 rounded-lg px-4 py-3">
+                    <div className="bg-green-600/25 border border-green-500/50 rounded-lg px-4 py-3 shadow-lg shadow-green-500/10">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
                           <span className="text-green-400">🔐 {user?.username}</span>
@@ -228,13 +228,13 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                   <div className="space-y-2">
                     <button
                       onClick={onLogin}
-                      className="w-full px-4 py-3 bg-gradient-to-r from-red-600/80 to-pink-600/80 hover:from-red-700 hover:to-pink-700 text-white rounded-lg font-medium transition-all duration-200 backdrop-blur-sm border border-red-500/30"
+                      className="w-full px-4 py-3 bg-gradient-to-r from-red-600/80 to-pink-600/80 hover:from-red-700 hover:to-pink-700 text-white rounded-lg font-medium transition-all duration-200 backdrop-blur-sm border border-red-500/50 shadow-lg shadow-red-500/20"
                     >
                       🔐 Admin Login
                     </button>
                     <button
                       onClick={onRegister}
-                      className="w-full px-4 py-3 bg-gradient-to-r from-blue-600/80 to-cyan-600/80 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg font-medium transition-all duration-200 backdrop-blur-sm border border-blue-500/30"
+                      className="w-full px-4 py-3 bg-gradient-to-r from-blue-600/80 to-cyan-600/80 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg font-medium transition-all duration-200 backdrop-blur-sm border border-blue-500/50 shadow-lg shadow-blue-500/20"
                     >
                       📝 User Registration
                     </button>

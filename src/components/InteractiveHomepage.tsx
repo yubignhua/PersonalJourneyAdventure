@@ -1,7 +1,8 @@
 'use client'
 
 import React, { useState, useEffect, Suspense, useCallback, useMemo } from 'react'
-import { Canvas } from '@react-three/fiber'
+import { ErrorBoundary } from 'react-error-boundary'
+import SafeCanvas from './3d/SafeCanvas'
 import Globe3D from './3d/Globe3D'
 import ParticleSystem from './3d/ParticleSystem'
 import SimpleTypewriter from './ui/SimpleTypewriter'
@@ -287,38 +288,50 @@ const InteractiveHomepage: React.FC = () => {
 
       {/* 3D Scene - Only render when unlocked */}
       {isUnlocked && (
-        <Canvas
-          className="w-full h-full"
-          camera={{ position: [0, 0, 8], fov: 60 }}
-          gl={{
-            antialias: true,
-            alpha: true,
-            powerPreference: 'high-performance'
-          }}
+        <ErrorBoundary
+          fallback={
+            <div className="w-full h-full flex items-center justify-center bg-black/20">
+              <div className="text-center text-white">
+                <div className="text-2xl mb-4">🌍</div>
+                <p className="text-sm opacity-80">3D visualization unavailable</p>
+                <p className="text-xs opacity-60 mt-2">Falling back to 2D mode</p>
+              </div>
+            </div>
+          }
         >
-          <Suspense fallback={null}>
-            {/* Lighting */}
-            <ambientLight intensity={0.4} />
-            <directionalLight position={[10, 10, 5]} intensity={0.8} />
+          <SafeCanvas
+            className="w-full h-full"
+            camera={{ position: [0, 0, 8], fov: 60 }}
+            gl={{
+              antialias: true,
+              alpha: true,
+              powerPreference: 'high-performance'
+            }}
+          >
+            <Suspense fallback={null}>
+              {/* Lighting */}
+              <ambientLight intensity={0.4} />
+              <directionalLight position={[10, 10, 5]} intensity={0.8} />
 
-            {/* Globe with skills */}
-            <Globe3D
-              skills={sortedSkills}
-              onSkillClick={handleSkillClick}
-              particleCount={50}
-              radius={2.5}
-              rotationSpeed={0.002}
-              interactive={true}
-            />
+              {/* Globe with skills */}
+              <Globe3D
+                skills={sortedSkills}
+                onSkillClick={handleSkillClick}
+                particleCount={50}
+                radius={2.5}
+                rotationSpeed={0.002}
+                interactive={true}
+              />
 
-            {/* Particle system */}
-            <ParticleSystem
-              particles={visibleParticles}
-              animationSpeed={1}
-              interactive={true}
-            />
-          </Suspense>
-        </Canvas>
+              {/* Particle system */}
+              <ParticleSystem
+                particles={visibleParticles}
+                animationSpeed={1}
+                interactive={true}
+              />
+            </Suspense>
+          </SafeCanvas>
+        </ErrorBoundary>
       )}
 
       {/* Loading Screen */}
