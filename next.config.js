@@ -7,6 +7,8 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // Disable Google Fonts optimization to prevent timeout errors
+  optimizeFonts: false,
   webpack: (config) => {
     config.externals.push({
       'utf-8-validate': 'commonjs utf-8-validate',

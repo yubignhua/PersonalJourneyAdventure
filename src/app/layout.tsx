@@ -1,9 +1,7 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { inter } from '@/lib/fonts'
 import { AuthProvider } from '@/lib/auth-context'
 import './globals.css'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Interactive Portfolio - Tech Adventure Journey',
