@@ -7,7 +7,7 @@
     "inspect-dev":"ENABLE_CODE_INSPECTOR=true pnpm dev",
     "build": "next build --no-lint",
     "build:prod": "NEXT_PUBLIC_BACKEND_URL=http://149.88.88.205:4001 NEXT_PUBLIC_SOCKET_URL=http://149.88.88.205:4001 NODE_ENV=production next build --no-lint",
-    "start": "next dev",
+    "start": "NEXT_PUBLIC_BACKEND_URL=http://149.88.88.205:4001 NEXT_PUBLIC_SOCKET_URL=http://149.88.88.205:4001 npm run dev",
     "lint": "next lint",
     "type-check": "tsc --noEmit"
   },
