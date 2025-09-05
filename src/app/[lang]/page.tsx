@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { getDictionary } from '@/lib/dictionaries' // Import getDictionary
+// import { getDictionary } from '@/lib/dictionaries' // Import getDictionary
 
 const InteractiveHomepage = dynamic(
   () => import('@/components/InteractiveHomepage'),
@@ -19,7 +19,7 @@ const InteractiveHomepage = dynamic(
 )
 
 export default async function Home({ params: { lang } }: { params: { lang: string } }) {
-  const dictionary = await getDictionary(lang) // Get dictionary based on lang
+  // const dictionary = await getDictionary(lang) // Get dictionary based on lang
   // You can now pass dictionary to InteractiveHomepage or use it here
   return <InteractiveHomepage />
 }
