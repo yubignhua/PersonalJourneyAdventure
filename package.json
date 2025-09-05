@@ -6,6 +6,7 @@
     "dev": "next dev",
     "inspect-dev":"ENABLE_CODE_INSPECTOR=true pnpm dev",
     "build": "next build --no-lint",
+    "build:prod": "next build --no-lint",
     "start": "next dev",
     "lint": "next lint",
     "type-check": "tsc --noEmit"
