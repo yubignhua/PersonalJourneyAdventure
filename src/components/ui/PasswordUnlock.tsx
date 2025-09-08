@@ -71,14 +71,16 @@ const PasswordUnlock: React.FC<PasswordUnlockProps> = ({
   }
 
   return (
-    <div className={`max-w-md mx-auto ${className}`}>
+    <div className={`max-w-md mx-auto ${className} w-250`}>
       <div className="bg-gray-900/90 backdrop-blur-sm border border-blue-500/30 rounded-lg p-6">
         <div className="text-center mb-6">
           <div className="text-blue-400 text-xl mb-2">
-            SECURE ACCESS REQUIRED
+            {/* SECURE ACCESS REQUIRED */}
+            欢迎探索我的宇宙坐标
           </div>
           <div className="text-gray-300 text-sm">
-            Please enter your access credentials to continue
+            {/* Please enter your access credentials to continue */}
+            请输入您的访问凭据以继续
           </div>
         </div>
 
@@ -125,7 +127,8 @@ const PasswordUnlock: React.FC<PasswordUnlockProps> = ({
               }
             `}
           >
-            AUTHENTICATE
+            {/* AUTHENTICATE */}
+            进入宇宙坐标
           </button>
         </form>
 

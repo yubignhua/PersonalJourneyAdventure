@@ -87,11 +87,11 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
             <div className="flex items-center space-x-3">
               <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white text-lg font-bold">L</span>
+                  <span className="text-white text-lg font-bold">A</span>
                 </div>
                 <div className="hidden sm:block">
-                  <h1 className="text-white font-bold text-lg">Interactive Lab</h1>
-                  <p className="text-gray-400 text-xs">Digital Universe</p>
+                  <h1 className="text-white font-bold text-lg">第Aryse象限</h1>
+                  <p className="text-gray-400 text-xs">Quadrant Aryse Digital Universe</p>
                 </div>
               </div>
             </div>
@@ -149,13 +149,15 @@ const NavigationBar: React.FC<NavigationBarProps> = ({
                     onClick={onLogin}
                     className="px-4 py-2 bg-gradient-to-r from-red-600/80 to-pink-600/80 hover:from-red-700 hover:to-pink-700 text-white rounded-lg font-medium transition-all duration-200 transform hover:scale-105 backdrop-blur-sm border border-red-500/50 shadow-lg shadow-red-500/20"
                   >
-                    🔐 Login
+                    {/* 🔐  */}
+                    Login
                   </button>
                   <button
                     onClick={onRegister}
                     className="px-4 py-2 bg-gradient-to-r from-blue-600/80 to-cyan-600/80 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg font-medium transition-all duration-200 transform hover:scale-105 backdrop-blur-sm border border-blue-500/50 shadow-lg shadow-blue-500/20"
                   >
-                    📝 Register
+                    {/* 📝  */}
+                    Register
                   </button>
                 </div>
               )}

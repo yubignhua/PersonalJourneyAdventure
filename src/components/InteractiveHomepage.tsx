@@ -301,6 +301,7 @@ const InteractiveHomepage: React.FC = () => {
         >
           <SafeCanvas
             className="w-full h-full"
+            style={{ height: '80vh'}}
             camera={{ position: [0, 0, 8], fov: 60 }}
             gl={{
               antialias: true,
@@ -354,17 +355,20 @@ const InteractiveHomepage: React.FC = () => {
           <div className="text-center max-w-2xl px-8">
             <div className="mb-8">
               <SimpleTypewriter
-                text="Welcome to the Interactive Laboratory"
+                // text="Welcome to the Interactive Laboratory"
+                text="欢迎进入Aryse的宇宙空间"
                 speed={80}
                 className="text-4xl font-bold text-white mb-4 block"
                 onComplete={handleIntroComplete}
               />
               <div className="text-xl text-blue-300 mt-4">
-                Where code meets creativity in three-dimensional space
+                {/* Where code meets creativity in three-dimensional space */}
+                代码在三维空间中邂逅创意的地方
               </div>
             </div>
             <div className="text-gray-400 text-sm mt-8">
-              Preparing immersive experience...
+              {/* Preparing immersive experience... */}
+              准备沉浸式体验中……
             </div>
           </div>
         </div>
