@@ -484,9 +484,8 @@ const InteractiveHomepage: React.FC = () => {
       )}
 
       {/* Right Side Panel - Desktop Only */}
-      {isUnlocked && (
+      {/* {isUnlocked && (
         <div className="hidden lg:block absolute top-8 right-8 z-10 w-80 space-y-4">
-          {/* Featured Blog Entry */}
           <div className="bg-gradient-to-br from-green-900/30 to-teal-900/30 backdrop-blur-sm rounded-xl p-5 text-white border border-green-500/30 hover:border-green-500/50 transition-all duration-300">
             <div className="flex items-center space-x-2 mb-3">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
@@ -504,8 +503,6 @@ const InteractiveHomepage: React.FC = () => {
               <span className="transform group-hover:translate-x-1 transition-transform duration-200">→</span>
             </a>
           </div>
-
-          {/* Quick Stats */}
           <div className="bg-black/40 backdrop-blur-sm rounded-xl p-4 border border-gray-700/50">
             <div className="grid grid-cols-2 gap-4 text-center">
               <div>
@@ -519,7 +516,7 @@ const InteractiveHomepage: React.FC = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Performance Indicator - Mobile Optimized */}
       {isUnlocked && (
