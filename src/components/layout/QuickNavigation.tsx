@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 
 interface QuickNavigationProps {
-    currentPage?: 'home' | 'projects' | 'blog'
+    currentPage?: 'home' | 'projects' | 'blog' | 'about'
     className?: string
 }
 
@@ -17,6 +17,14 @@ const navigationItems = [
         href: '/',
         color: 'blue',
         description: 'Interactive Lab'
+    },
+    {
+        id: 'about',
+        label: 'Universe',
+        icon: '🌌',
+        href: '/about',
+        color: 'indigo',
+        description: 'Personal Universe'
     },
     {
         id: 'projects',
@@ -45,6 +53,9 @@ const QuickNavigation: React.FC<QuickNavigationProps> = ({
             blue: isCurrent
                 ? 'bg-blue-600/30 text-blue-400 border-blue-500/50'
                 : 'bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 border-blue-500/30',
+            indigo: isCurrent
+                ? 'bg-indigo-600/30 text-indigo-400 border-indigo-500/50'
+                : 'bg-indigo-600/10 hover:bg-indigo-600/20 text-indigo-400 border-indigo-500/30',
             purple: isCurrent
                 ? 'bg-purple-600/30 text-purple-400 border-purple-500/50'
                 : 'bg-purple-600/10 hover:bg-purple-600/20 text-purple-400 border-purple-500/30',

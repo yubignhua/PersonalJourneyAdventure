@@ -3,13 +3,18 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import BlogEditor from '@/components/blog/BlogEditor';
-import QuickNavigation from '@/components/layout/QuickNavigation';
+import NavigationBar from '@/components/layout/NavigationBar';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { apiService } from '@/lib/api-service';
+import { useAuth } from '@/lib/auth-context';
 
 export default function CreateBlogPage() {
     const router = useRouter();
+    const { isAuthenticated, user, logout } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
+
+    const handleLogin = () => console.log('Login handled by NavigationBar');
+    const handleRegister = () => console.log('Register handled by NavigationBar');
 
     const handleSave = async (postData: any) => {
         setIsLoading(true);
@@ -32,20 +37,20 @@ export default function CreateBlogPage() {
     return (
         <ProtectedRoute adminOnly={true}>
             <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-                {/* Navigation Header */}
-                <div className="bg-black/20 backdrop-blur-sm border-b border-white/10 sticky top-0 z-50">
-                    <div className="container mx-auto px-4 py-4">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-4">
-                                <h2 className="text-xl font-bold text-white">✍️ Create New Post</h2>
-                            </div>
+                <NavigationBar
+                    isAuthenticated={isAuthenticated}
+                    user={user}
+                    onLogin={handleLogin}
+                    onRegister={handleRegister}
+                    onLogout={logout}
+                />
 
-                            <QuickNavigation currentPage="blog" />
-                        </div>
+                <div className="container mx-auto px-4 pt-24">
+                    <div className="mb-8">
+                        <h1 className="text-4xl font-bold text-white mb-2">✍️ Create New Post</h1>
+                        <p className="text-gray-300">Share your knowledge and insights with the world</p>
                     </div>
-                </div>
-
-                <div className="container mx-auto px-4 py-8">
+                    
                     <BlogEditor
                         onSave={handleSave}
                         isLoading={isLoading}

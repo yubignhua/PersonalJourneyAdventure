@@ -34,12 +34,12 @@ export default function BlogPostViewer({ post }: BlogPostViewerProps) {
   };
 
   return (
-    <div className="min-h-screen">
-      {/* Header */}
+    <div className="min-h-screen pt-20">
+      {/* Post Header */}
       <div className="bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 border-b border-slate-700">
         <div className="container mx-auto px-4 py-8">
-          {/* Navigation */}
-          <div className="flex items-center gap-4 mb-8">
+          {/* Back Navigation */}
+          <div className="flex items-center gap-4 mb-6">
             <Link 
               href="/blog"
               className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
@@ -47,10 +47,10 @@ export default function BlogPostViewer({ post }: BlogPostViewerProps) {
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
-              Back to Timeline
+              Back to Blog
             </Link>
           </div>
-
+          
           {/* Post Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}

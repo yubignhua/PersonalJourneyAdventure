@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import BlogEditor from '@/components/blog/BlogEditor';
-import QuickNavigation from '@/components/layout/QuickNavigation';
+import NavigationBar from '@/components/layout/NavigationBar';
 import LoadingSpinner from '@/components/3d/LoadingSpinner';
 import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import { useAuth } from '@/lib/auth-context';
 
 interface Post {
     id?: number;
@@ -30,9 +31,13 @@ interface Post {
 export default function EditBlogPage() {
     const router = useRouter();
     const params = useParams();
+    const { isAuthenticated, user, logout } = useAuth();
     const [post, setPost] = useState<Post | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isLoadingPost, setIsLoadingPost] = useState(true);
+
+    const handleLogin = () => console.log('Login handled by NavigationBar');
+    const handleRegister = () => console.log('Register handled by NavigationBar');
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -147,36 +152,36 @@ export default function EditBlogPage() {
     return (
         <ProtectedRoute adminOnly={true}>
             <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-            {/* Navigation Header */}
-            <div className="bg-black/20 backdrop-blur-sm border-b border-white/10 sticky top-0 z-50">
-                <div className="container mx-auto px-4 py-4">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                            <h2 className="text-xl font-bold text-white">✏️ Edit Post</h2>
-                        </div>
+                <NavigationBar
+                    isAuthenticated={isAuthenticated}
+                    user={user}
+                    onLogin={handleLogin}
+                    onRegister={handleRegister}
+                    onLogout={logout}
+                />
 
-                        <div className="flex items-center space-x-4">
-                            <button
-                                onClick={handleDelete}
-                                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-sm"
-                            >
-                                🗑️ Delete
-                            </button>
-                            <QuickNavigation currentPage="blog" />
+                <div className="container mx-auto px-4 pt-24">
+                    <div className="flex items-center justify-between mb-8">
+                        <div>
+                            <h1 className="text-4xl font-bold text-white mb-2">✏️ Edit Post</h1>
+                            <p className="text-gray-300">Update your content and share your insights</p>
                         </div>
+                        <button
+                            onClick={handleDelete}
+                            className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors font-medium"
+                        >
+                            🗑️ Delete Post
+                        </button>
                     </div>
+                    
+                    <BlogEditor
+                        initialData={post}
+                        onSave={handleSave}
+                        isLoading={isLoading}
+                        mode="edit"
+                    />
                 </div>
             </div>
-
-            <div className="container mx-auto px-4 py-8">
-                <BlogEditor
-                    initialData={post}
-                    onSave={handleSave}
-                    isLoading={isLoading}
-                    mode="edit"
-                />
-            </div>
-        </div>
         </ProtectedRoute>
     );
 }

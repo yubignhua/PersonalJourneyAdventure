@@ -5,6 +5,11 @@ import dynamic from 'next/dynamic'
 import { SkillPlanet, ExperienceEntry } from '@/types/3d'
 import PlanetDetailModal from '@/components/3d/PlanetDetailModal'
 import Scene3DErrorBoundaryWrapper from '@/components/3d/Scene3DErrorBoundaryWrapper'
+import NavigationBar from '@/components/layout/NavigationBar'
+import QuickNavigation from '@/components/layout/QuickNavigation'
+import { useAuth } from '@/lib/auth-context'
+import { LoginModal } from '@/components/auth/LoginModal'
+import RegisterModal from '@/components/auth/RegisterModal'
 
 // Dynamically import 3D components to avoid SSR issues
 const SimpleGalaxyVisualization = dynamic(
@@ -20,8 +25,11 @@ const SimpleGalaxyVisualization = dynamic(
 )
 
 export default function AboutPage() {
+    const { isAuthenticated, user, logout } = useAuth()
     const [selectedPlanet, setSelectedPlanet] = useState<SkillPlanet | null>(null)
     const [selectedExperience, setSelectedExperience] = useState<ExperienceEntry | null>(null)
+    const [showLoginModal, setShowLoginModal] = useState(false)
+    const [showRegisterModal, setShowRegisterModal] = useState(false)
 
     // Mock data for skill planets - in a real app, this would come from an API
     const skillPlanets: SkillPlanet[] = useMemo(() => [
@@ -160,88 +168,104 @@ export default function AboutPage() {
     }
 
     return (
-        <div className="min-h-screen bg-black text-white">
-            {/* Header */}
-            <div className="relative z-10 p-6">
-                <div className="max-w-4xl mx-auto text-center">
-                    <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+        <div className="relative w-full min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-black overflow-hidden">
+            {/* Navigation Bar */}
+            <NavigationBar
+                isAuthenticated={isAuthenticated}
+                user={user}
+                onLogin={() => setShowLoginModal(true)}
+                onRegister={() => setShowRegisterModal(true)}
+                onLogout={logout}
+            />
+
+            {/* Quick Navigation */}
+            {/* <div className="flex justify-center mb-8">
+                <QuickNavigation currentPage="about" />
+            </div> */}
+
+            {/* Background stars effect */}
+            <div className="absolute inset-0 opacity-30">
+                <div className="stars-small"></div>
+                <div className="stars-medium"></div>
+                <div className="stars-large"></div>
+            </div>
+
+            <div className="relative z-10 container mx-auto px-4 py-8">
+                <div className="text-center mb-12">
+                    <h1 className="text-5xl font-bold text-white mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                         Personal Universe
                     </h1>
-                    <p className="text-xl text-gray-300 mb-8">
-                        Explore my skills and experience through an interactive galaxy
+                    <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+                        Explore my skills and experience through an interactive galaxy visualization
                     </p>
                 </div>
-            </div>
 
-            {/* Galaxy Visualization */}
-            <div className="h-[70vh] relative">
-                <Scene3DErrorBoundaryWrapper
-                    fallback={
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-b from-purple-900 via-blue-900 to-black">
-                            <div className="text-center text-white">
-                                <div className="text-6xl mb-4">🪐</div>
-                                <h2 className="text-2xl font-bold mb-4">Personal Universe</h2>
-                                <p className="text-gray-300 mb-6">3D visualization is not available on this device</p>
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl">
-                                    {skillPlanets.map(planet => (
-                                        <div
-                                            key={planet.id}
-                                            className="bg-gray-800 p-4 rounded-lg border border-gray-700 hover:border-blue-500 transition-colors cursor-pointer"
-                                            onClick={() => handlePlanetSelect(planet)}
-                                        >
-                                            <div className="flex items-center space-x-3 mb-2">
-                                                <div
-                                                    className="w-4 h-4 rounded-full"
-                                                    style={{ backgroundColor: planet.color }}
-                                                />
-                                                <h3 className="font-semibold">{planet.name}</h3>
+                          {/* Galaxy Visualization */}
+                <div className="h-[70vh] relative mb-8">
+                    <Scene3DErrorBoundaryWrapper
+                        fallback={
+                            <div className="w-full h-full flex items-center justify-center bg-gradient-to-b from-purple-900 via-blue-900 to-black rounded-lg">
+                                <div className="text-center text-white p-6">
+                                    <div className="text-6xl mb-4">🪐</div>
+                                    <h2 className="text-2xl font-bold mb-4">Personal Universe</h2>
+                                    <p className="text-gray-300 mb-6">3D visualization is not available on this device</p>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl">
+                                        {skillPlanets.map(planet => (
+                                            <div
+                                                key={planet.id}
+                                                className="bg-gray-800/50 backdrop-blur-sm p-4 rounded-lg border border-gray-700 hover:border-blue-500 transition-colors cursor-pointer"
+                                                onClick={() => handlePlanetSelect(planet)}
+                                            >
+                                                <div className="flex items-center space-x-3 mb-2">
+                                                    <div
+                                                        className="w-4 h-4 rounded-full"
+                                                        style={{ backgroundColor: planet.color }}
+                                                    />
+                                                    <h3 className="font-semibold text-white">{planet.name}</h3>
+                                                </div>
+                                                <p className="text-sm text-gray-400 mb-2">{planet.category}</p>
+                                                <div className="w-full bg-gray-700 rounded-full h-2">
+                                                    <div
+                                                        className="h-2 rounded-full transition-all duration-300"
+                                                        style={{
+                                                            width: `${planet.proficiencyLevel}%`,
+                                                            backgroundColor: planet.color
+                                                        }}
+                                                    />
+                                                </div>
+                                                <span className="text-xs text-gray-500">{planet.proficiencyLevel}%</span>
                                             </div>
-                                            <p className="text-sm text-gray-400 mb-2">{planet.category}</p>
-                                            <div className="w-full bg-gray-700 rounded-full h-2">
-                                                <div
-                                                    className="h-2 rounded-full transition-all duration-300"
-                                                    style={{
-                                                        width: `${planet.proficiencyLevel}%`,
-                                                        backgroundColor: planet.color
-                                                    }}
-                                                />
-                                            </div>
-                                            <span className="text-xs text-gray-500">{planet.proficiencyLevel}%</span>
-                                        </div>
-                                    ))}
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    }
-                >
-                    <SimpleGalaxyVisualization
-                        skillPlanets={skillPlanets}
-                        experiences={experiences}
-                        onPlanetSelect={handlePlanetSelect}
-                        onExperienceSelect={handleExperienceSelect}
-                        autoRotate={true}
-                    />
-                </Scene3DErrorBoundaryWrapper>
-            </div>
+                        }
+                    >
+                        <SimpleGalaxyVisualization
+                            skillPlanets={skillPlanets}
+                            experiences={experiences}
+                            onPlanetSelect={handlePlanetSelect}
+                            onExperienceSelect={handleExperienceSelect}
+                            autoRotate={true}
+                        />
+                    </Scene3DErrorBoundaryWrapper>
+                </div>
 
-            {/* Instructions */}
-            <div className="p-6">
-                <div className="max-w-4xl mx-auto">
-                    <div className="bg-gray-900 rounded-lg p-6">
-                        <h2 className="text-2xl font-bold mb-4">How to Navigate</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                            <div className="flex items-center space-x-3">
-                                <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
-                                <span>Click planets to explore skills in detail</span>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                                <div className="w-4 h-4 bg-purple-500 rounded-full"></div>
-                                <span>Drag to rotate and zoom the galaxy</span>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                                <div className="w-4 h-4 bg-yellow-500 rounded-full"></div>
-                                <span>Experience timeline orbits around the center</span>
-                            </div>
+                {/* Instructions */}
+                <div className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700">
+                    <h2 className="text-2xl font-bold text-white mb-4">How to Navigate</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                        <div className="flex items-center space-x-3">
+                            <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
+                            <span className="text-gray-300">Click planets to explore skills in detail</span>
+                        </div>
+                        <div className="flex items-center space-x-3">
+                            <div className="w-4 h-4 bg-purple-500 rounded-full"></div>
+                            <span className="text-gray-300">Drag to rotate and zoom the galaxy</span>
+                        </div>
+                        <div className="flex items-center space-x-3">
+                            <div className="w-4 h-4 bg-yellow-500 rounded-full"></div>
+                            <span className="text-gray-300">Experience timeline orbits around the center</span>
                         </div>
                     </div>
                 </div>
@@ -254,15 +278,15 @@ export default function AboutPage() {
                 onClose={() => setSelectedPlanet(null)}
             />
 
-            {/* Experience Detail Modal */}
+                      {/* Experience Detail Modal */}
             {selectedExperience && (
-                <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-                    <div className="bg-gray-900 rounded-lg p-6 max-w-2xl w-full mx-4">
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50">
+                    <div className="bg-gray-800/90 backdrop-blur-sm rounded-lg p-6 max-w-2xl w-full mx-4 border border-gray-700">
                         <div className="flex justify-between items-center mb-4">
                             <h2 className="text-2xl font-bold text-white">{selectedExperience.title}</h2>
                             <button
                                 onClick={() => setSelectedExperience(null)}
-                                className="text-gray-400 hover:text-white text-xl"
+                                className="text-gray-400 hover:text-white text-xl transition-colors"
                             >
                                 ✕
                             </button>
@@ -279,7 +303,7 @@ export default function AboutPage() {
                                     {selectedExperience.technologies.map((tech, index) => (
                                         <span
                                             key={index}
-                                            className="bg-gray-700 text-gray-300 px-2 py-1 rounded text-sm"
+                                            className="bg-gray-700/50 text-gray-300 px-3 py-1 rounded-full text-sm border border-gray-600"
                                         >
                                             {tech}
                                         </span>
@@ -290,6 +314,26 @@ export default function AboutPage() {
                     </div>
                 </div>
             )}
+
+            {/* Login Modal */}
+            <LoginModal
+                isOpen={showLoginModal}
+                onClose={() => setShowLoginModal(false)}
+                onSwitchToRegister={() => {
+                    setShowLoginModal(false)
+                    setShowRegisterModal(true)
+                }}
+            />
+
+            {/* Register Modal */}
+            <RegisterModal
+                isOpen={showRegisterModal}
+                onClose={() => setShowRegisterModal(false)}
+                onSwitchToLogin={() => {
+                    setShowRegisterModal(false)
+                    setShowLoginModal(true)
+                }}
+            />
         </div>
     )
 }

@@ -4,13 +4,21 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import BlogPostViewer from '@/components/blog/BlogPostViewer';
 import LoadingSpinner from '@/components/3d/LoadingSpinner';
+import NavigationBar from '@/components/layout/NavigationBar';
+import { useAuth } from '@/lib/auth-context';
+import { LoginModal } from '@/components/auth/LoginModal';
 import { BlogPost } from '@/types/blog';
 
 export default function BlogPostPage() {
   const params = useParams();
+  const { isAuthenticated, user, logout } = useAuth();
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [post, setPost] = useState<BlogPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const handleLogin = () => setShowLoginModal(true);
+  const handleRegister = () => setShowLoginModal(true);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -63,7 +71,19 @@ export default function BlogPostPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <NavigationBar
+        isAuthenticated={isAuthenticated}
+        user={user}
+        onLogin={handleLogin}
+        onRegister={handleRegister}
+        onLogout={logout}
+      />
       <BlogPostViewer post={post} />
+      
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+      />
     </div>
   );
 }
