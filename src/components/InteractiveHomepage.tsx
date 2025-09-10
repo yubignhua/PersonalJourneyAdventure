@@ -10,6 +10,7 @@ import PasswordUnlock from './ui/PasswordUnlock'
 import NavigationBar from './layout/NavigationBar'
 import { LoginModal } from './auth/LoginModal'
 import RegisterModal from './auth/RegisterModal'
+import PersonalHeroSection from './PersonalHeroSection'
 import { SkillPoint, ParticleData } from '@/types/3d'
 import { skillService } from '@/services/skillService'
 import { useAuth } from '@/lib/auth-context'
@@ -284,6 +285,11 @@ const InteractiveHomepage: React.FC = () => {
         <div className="stars-small"></div>
         <div className="stars-medium"></div>
         <div className="stars-large"></div>
+      </div>
+
+      {/* Personal Hero Section - Always visible */}
+      <div className="relative z-10 container mx-auto px-4 pt-24 pb-8">
+        <PersonalHeroSection showActions={true} />
       </div>
 
       {/* 3D Scene - Only render when unlocked */}
